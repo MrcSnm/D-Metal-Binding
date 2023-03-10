@@ -1,0 +1,11 @@
+{
+	"authors": [
+		"Hipreme"
+	],
+	"copyright": "Copyright © 2023, Hipreme",
+	"description": "extern(Objective-C) bindings to Apple's metal",
+	"targetName": "metal",
+	"targetType": "staticLibrary",
+	"license": "MIT",
+	"name": "d-metal-binding"
+}
