@@ -9,6 +9,7 @@ d-metal-binding.dll
 d-metal-binding.a
 d-metal-binding.lib
 d-metal-binding-test-*
+.DS-Store
 *.a
 *.lib
 *.exe

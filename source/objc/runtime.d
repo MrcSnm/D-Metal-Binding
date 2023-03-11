@@ -37,11 +37,11 @@ extern class NSObject
     static NSObject alloc() @selector("alloc");
     NSObject initialize() @selector("init");
     ///Increments the receiver’s reference count.
-    NSObject retain();
+    NSObject retain() @selector("retain");
     ///Decrements the receiver’s reference count.
-    void release();
+    void release() @selector("release");
     ///Decrements the receiver’s retain count at the end of the current autorelease pool block.
-    NSObject autorelease();
+    NSObject autorelease() @selector("autorelease");
 
 }
 

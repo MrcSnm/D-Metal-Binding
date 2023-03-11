@@ -246,6 +246,7 @@ version(D_ObjectiveC)
     interface MTLCounterSampleBuffer
     {
         ///Transforms samples of a GPU’s counter set from the driver’s internal format to a standard Metal data structure.
+        @selector("resolveCounterRange:")
         NSData resolveCounterRange(NSRange range);
     }
 

@@ -42,6 +42,7 @@ extern interface MTLFunctionHandle
 extern interface MTLAccelerationStructure
 {
     ///The size of the acceleration structure’s memory allocation, in bytes.
+    @selector("size")
     NSUInteger size();
 
     // MTLResourceID gpuResourceID();
