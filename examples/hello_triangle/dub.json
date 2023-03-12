@@ -1,0 +1,16 @@
+{
+	"authors": [
+		"Hipreme"
+	],
+	"dependencies": {
+		"d-metal-binding": {"path": "../../"}
+	},
+	"postGenerateCommands": [
+		"libtool -static -o ../d_metal_app.a ../../libs/libmetal.a"
+	],
+	"targetType": "staticLibrary",
+	"copyright": "Copyright © 2023, Hipreme",
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "hello_triangle"
+}

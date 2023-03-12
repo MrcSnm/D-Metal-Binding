@@ -5,6 +5,7 @@
 	"copyright": "Copyright © 2023, Hipreme",
 	"description": "extern(Objective-C) bindings to Apple's metal",
 	"targetName": "metal",
+	"targetPath": "libs",
 	"targetType": "staticLibrary",
 	"license": "MIT",
 	"name": "d-metal-binding"

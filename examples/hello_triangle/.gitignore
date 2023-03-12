@@ -1,0 +1,17 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/hello_triangle
+hello_triangle.so
+hello_triangle.dylib
+hello_triangle.dll
+hello_triangle.a
+hello_triangle.lib
+hello_triangle-test-*
+.DS_Store
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst
