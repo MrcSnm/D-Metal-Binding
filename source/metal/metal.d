@@ -48,6 +48,7 @@ version(D_ObjectiveC)
         Tracked = 2
     }
 
+    ///Optional arguments used to set the behavior of a resource.
     enum MTLResourceOptions : NSUInteger
     {
         ///The default CPU cache mode for the resource, which guarantees that read and write operations are executed in the expected order.
@@ -115,12 +116,12 @@ version(D_ObjectiveC)
     
     struct MTLViewport
     {
-        double originX;
-        double originY;
-        double width;
-        double height;
-        double znear;
-        double zfar;
+        double originX = 0;
+        double originY = 0;
+        double width = 0;
+        double height = 0;
+        double znear = 0;
+        double zfar = 0;
     }
 
     enum MTLCullMode : NSUInteger
@@ -747,9 +748,36 @@ version(D_ObjectiveC)
 
 
 
-    extern class MTLBuffer
+    extern interface MTLBuffer
     {
-        void* contents;
+        ///Creates a texture that shares its storage with the buffer.
+        @selector("newTextureWithDescriptor:offset:bytesPerRow:")
+        MTLTexture newTextureWithDescriptor(
+            MTLTextureDescriptor,
+            NSUInteger offset,
+            NSUInteger bytesPerRow
+        );
+
+
+        ///Gets the system address of the buffer’s storage allocation.
+        void* contents() @selector("contents");
+        ///Informs the GPU that the CPU has modified a section of the buffer.
+        void didModifyRange(NSRange) @selector("didModifyRange:");
+
+        ///Adds a debug marker string to a specific buffer range.
+        @selector("addDebugMarker:range:")
+        void addDebugMarker(NSString marker, NSRange range);
+
+        ///Removes all debug marker strings from the buffer.
+        @selector("removeAllDebugMarkers")
+        void removeAllDebugMarkers();
+
+        ///The logical size of the buffer, in bytes.
+        @selector("length")
+        NSUInteger length();
+
+        
+
         void setLabel(NSString) @selector("setLabel:");
     }
 

@@ -39,6 +39,7 @@ enum MTLLibraryType : NSInteger
 
 extern class MTLCompileOptions : NSObject
 {
+    
     ///A Boolean value that indicates whether the compiler can perform optimizations for floating-point arithmetic that may violate the IEEE 754 standard.
     @selector("fastMathEnabled")
     BOOL fastMathEnabled();
