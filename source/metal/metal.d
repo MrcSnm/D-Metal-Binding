@@ -789,9 +789,8 @@ version(D_ObjectiveC)
         @selector("length")
         NSUInteger length();
 
-        
-
-        void setLabel(NSString) @selector("setLabel:");
+        @selector("dealloc")
+        void dealloc();
     }
 
     ///An object you use to synchronize access to Metal resources.

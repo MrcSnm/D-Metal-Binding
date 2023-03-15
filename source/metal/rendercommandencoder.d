@@ -48,18 +48,6 @@ extern interface MTLAccelerationStructure
     // MTLResourceID gpuResourceID();
 }
 
-extern interface MTLSamplerState
-{
-    ///The device object that created the sampler.
-    @selector("device")
-    MTLDevice device();
-
-    ///A string that identifies the sampler.
-    @selector("label")
-    NSString label();
-    // MTLResourceID gpuResourceID();
-}
-
 ///A table of intersection functions that Metal calls to perform ray-tracing intersection tests.
 extern interface MTLIntersectionFunctionTable
 {

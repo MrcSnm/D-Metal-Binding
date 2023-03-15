@@ -17,7 +17,7 @@ enum MTLSamplerAddressMode : NSUInteger
     ///Texture coordinates wrap to the other side of the texture, effectively keeping only the fractional part of the texture coordinate.
     Repeat = 2,
     ///Between -1.0 and 1.0, the texture coordinates are mirrored across the axis; outside -1.0 and 1.0, the image is repeated.
-    MirorrRepeat = 3,
+    MirrorRepeat = 3,
     ///Out-of-range texture coordinates return transparent zero (0,0,0,0) for images with an alpha channel and return opaque zero (0,0,0,1) for images without an alpha channel.
     ClampToZero = 4,
     ///Out-of-range texture coordinates return the value specified by the borderColor property.
@@ -78,7 +78,7 @@ enum MTLCompareFunction : NSUInteger
 }
 
 ///An object that you use to configure a texture sampler.
-extern class MTLSamplerStateDescriptor : NSObject
+extern class MTLSamplerDescriptor : NSObject
 {
     ///A Boolean value that indicates whether texture coordinates are normalized to the range [0.0, 1.0].
     @selector("normalizedCoordinates")
@@ -162,13 +162,13 @@ extern class MTLSamplerStateDescriptor : NSObject
     @selector("supportArgumentBuffers")
     BOOL supportArgumentBuffers();
     @selector("setSupportArgumentBuffers:")
-    BOOL supportArgumentBuffers();
+    BOOL supportArgumentBuffers(BOOL);
 
     ///A string that identifies the sampler.
     @selector("label")
     NSString label();
     @selector("setLabel:")
-    NSString label();
+    NSString label(NSString);
 
 
 }
@@ -265,7 +265,7 @@ extern class MTLTextureDescriptor : NSObject
 {
     ///Creates a texture descriptor object for a 2D texture.
     @selector("texture2DDescriptorWithPixelFormat:width:height:mipmapped:")
-    MTLTextureDescriptor texture2DDescriptorWithPixelFormat(
+    static MTLTextureDescriptor texture2DDescriptorWithPixelFormat(
         MTLPixelFormat, 
         NSUInteger width, 
         NSUInteger height, 
@@ -274,7 +274,7 @@ extern class MTLTextureDescriptor : NSObject
 
     ///Creates a texture descriptor object for a cube texture.
     @selector("textureCubeDescriptorWithPixelFormat:size:mipmapped:")
-    MTLTextureDescriptor textureCubeDescriptorWithPixelFormat(
+    static MTLTextureDescriptor textureCubeDescriptorWithPixelFormat(
         MTLPixelFormat,
         NSUInteger size,
         BOOL mipmapped
@@ -282,7 +282,7 @@ extern class MTLTextureDescriptor : NSObject
 
     ///Creates a texture descriptor object for a texture buffer.
     @selector("textureBufferDescriptorWithPixelFormat:width:resourceOptions:usage:")
-    MTLTextureDescriptor textureBufferDescriptorWithPixelFormat(
+    static MTLTextureDescriptor textureBufferDescriptorWithPixelFormat(
         MTLPixelFormat,
         NSUInteger width,
         MTLResourceOptions resourceOptions,
