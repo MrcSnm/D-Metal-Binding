@@ -653,6 +653,11 @@ version(D_ObjectiveC)
         @selector("newBufferWithBytes:length:options:")
         MTLBuffer newBuffer(const(void)* pointer, NSUInteger length, MTLResourceOptions options);
 
+        ///Creates a new texture instance.
+        @selector("newTextureWithDescriptor:")
+        MTLTexture newTextureWithDescriptor(MTLTextureDescriptor descriptor);
+
+
         ///Synchronously creates a Metal library instance by compiling the functions in a source string.
         @selector("newLibraryWithSource:options:error:")
         MTLLibrary newLibraryWithSource(NSString source, MTLCompileOptions options, NSError* error = null);
@@ -671,6 +676,14 @@ version(D_ObjectiveC)
         ///Synchronously creates a render pipeline state.
         @selector("newRenderPipelineStateWithDescriptor:error:")
         MTLRenderPipelineState newRenderPipelineStateWithDescriptor(MTLRenderPipelineDescriptor descriptor, NSError* error = null);
+
+        ///Returns a Boolean value that indicates whether the GPU can sample a texture with a specific number of sample points.
+        @selector("supportsTextureSampleCount:")
+        BOOL supportsTextureSampleCount(NSUInteger sampleCount);
+
+        ///Creates a sampler state instance.
+        MTLSamplerState newSamplerStateWithDescriptor(MTLSamplerDescriptor descriptor);
+
 
     }
 
