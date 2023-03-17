@@ -2,6 +2,8 @@ module metal.blitcommandencoder;
 
 version(D_ObjectiveC):
 extern(Objective-C):
+import metal.metal;
+import metal.texture;
 
 ///The options that enable behavior for some blit operations.
 enum MTLBlitOption : NSUInteger
@@ -17,7 +19,7 @@ enum MTLBlitOption : NSUInteger
 }
 
 ///An interface you can use to encode GPU commands that copy and modify the underlying memory of various Metal resources.
-extern interface MTLBlitCommandEncoder
+extern interface MTLBlitCommandEncoder : MTLCommandEncoder
 {
     ///Encodes a command that fills a buffer with a constant value for each byte.
     @selector("fillBuffer:range:value:")

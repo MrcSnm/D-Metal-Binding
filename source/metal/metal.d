@@ -738,6 +738,10 @@ version(D_ObjectiveC)
         @selector("commandBufferWithUnretainedReferences")
         MTLCommandBuffer commandBufferWithUnretainedReferences();
 
+        ///The GPU device that creates the command queue.
+        @selector("device")
+        MTLDevice device();
+
         ///An optional name that can help you identify the command queue.
         @selector("label")
         NSString label();
@@ -757,6 +761,49 @@ version(D_ObjectiveC)
         // CAMetalLayer layer();
     }
 
+    ///An allocation of memory that is accessible to a GPU.
+    extern interface MTLResource
+    {
+        ///The device object that created the resource.
+        @selector("device")
+        MTLDevice device();
+
+        ///A string that identifies the resource.
+        @selector("label")
+        NSString label();
+        @selector("setLabel:")
+        NSString label(NSString);
+    }
+    
+    extern interface MTLCommandEncoder
+    {
+        ///Declares that all command generation from the encoder is completed.
+        @selector("endEncoding")
+        void endEncoding();
+
+        ///Inserts a debug string into the captured frame data.
+        @selector("insertDebugSignpost:")
+        void insertDebugSignpost(NSString);
+
+        ///Pushes a specific string onto a stack of debug group strings for the command encoder.
+        @selector("pushDebugGroup:")
+        void pushDebugGroup(NSString);
+
+        ///Pops the latest string off of a stack of debug group strings for the command encoder.
+        @selector("popDebugGroup")
+        void popDebugGroup();
+
+        ///The Metal device from which the command encoder was created.
+        @selector("device")
+        MTLDevice device();
+
+        ///A string that labels the command encoder.
+        @selector("label")
+        NSString label();
+
+        @selector("setLabel:")
+        NSString label(NSString);
+    }
 
 
     extern interface MTLBuffer
