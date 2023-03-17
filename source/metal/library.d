@@ -37,9 +37,14 @@ enum MTLLibraryType : NSInteger
     Dynamic = 1
 }
 
+
 extern class MTLCompileOptions : NSObject
 {
-    
+    @selector("alloc")
+    override static MTLCompileOptions alloc();
+    @selector("init")
+    override MTLCompileOptions initialize();
+
     ///A Boolean value that indicates whether the compiler can perform optimizations for floating-point arithmetic that may violate the IEEE 754 standard.
     @selector("fastMathEnabled")
     BOOL fastMathEnabled();

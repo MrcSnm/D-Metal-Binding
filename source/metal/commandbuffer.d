@@ -5,6 +5,7 @@ extern(Objective-C):
 
 import metal.metal;
 import metal.rendercommandencoder;
+import metal.blitcommandencoder;
 
 ///Options for reporting errors from a command buffer.
 enum MTLCommandBufferErrorOption : NSUInteger
@@ -47,6 +48,17 @@ enum MTLCommandBufferStatus : NSUInteger
     Completed = 4,
     ///A command buffer’s unsuccessful, final state, which indicates the GPU stopped running the buffer’s commands because of a runtime issue.
     Error = 5
+}
+
+///A configuration you create to customize a blit command encoder, which affects the runtime behavior of the blit pass you encode with it.
+extern class MTLBlitPassDescriptor : NSObject
+{
+    ///Creates a new blit pass descriptor with a default configuration.
+    @selector("blitPassDescriptor")
+    static MTLBlitPassDescriptor blitPassDescriptor();
+
+    ///An array of counter sample buffer attachments that you configure for a blit pass.
+
 }
 
 ///A completion handler signature a GPU device calls when it finishes scheduling a command buffer, or when the GPU finishes running it.
@@ -105,6 +117,15 @@ extern interface MTLCommandBuffer
 
     @selector("renderCommandEncoderWithDescriptor:")
     MTLRenderCommandEncoder renderCommandEncoderWithDescriptor(MTLRenderPassDescriptor renderPassDescriptor);
+
+    ///Creates a block information transfer (blit) encoder.
+    @selector("blitCommandEncoder")
+    MTLBlitCommandEncoder blitCommandEncoder();
+
+    ///Creates a block information transfer (blit) encoder from a descriptor.
+    @selector("blitCommandEncoderWithDescriptor:")
+    MTLBlitCommandEncoder blitCommandEncoderWithDescriptor(MTLBlitPassDescriptor);
+
 
     ///A string to help identify this object
     @selector("label")

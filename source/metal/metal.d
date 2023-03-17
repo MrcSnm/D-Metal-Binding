@@ -10,6 +10,7 @@ version(D_ObjectiveC)
     import metal.pixelformat;
     import metal.commandbuffer;
     import metal.texture;
+    import metal.blitcommandencoder;
 
 
 
@@ -88,11 +89,8 @@ version(D_ObjectiveC)
     }
 
     
-    extern class MTLRenderPipelineState
+    extern interface MTLRenderPipelineState
     {
-        static MTLRenderPipelineState alloc() @selector("alloc");
-        MTLRenderPipelineState init() @selector("init");
-
         MTLDevice device() @selector("device");
         NSString label() @selector("label");
 

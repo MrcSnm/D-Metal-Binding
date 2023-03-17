@@ -15,4 +15,9 @@ extern class MTKView
     ///The drawable to use for the current frame.
     @selector("currentDrawable")
     CAMetalDrawable currentDrawable();
+
+    ///The device object the view uses to create its Metal objects.
+    ///Only getter will be supported since the renderer is initialized from Objective-C
+    @selector("device")
+    MTLDevice device();
 }

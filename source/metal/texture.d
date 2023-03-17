@@ -80,6 +80,11 @@ enum MTLCompareFunction : NSUInteger
 ///An object that you use to configure a texture sampler.
 extern class MTLSamplerDescriptor : NSObject
 {
+    @selector("alloc")
+    override static MTLSamplerDescriptor alloc();
+    @selector("init")
+    override MTLSamplerDescriptor initialize();
+
     ///A Boolean value that indicates whether texture coordinates are normalized to the range [0.0, 1.0].
     @selector("normalizedCoordinates")
     BOOL normalizedCoordinates();
