@@ -147,7 +147,46 @@ extern class NSDictionary : NSObject
     static NSDictionary dictionary();
 }
 
-extern class NSError{}
+alias NSErrorDomain = NSString;
+
+extern class NSError
+{
+    ///The error code
+    @selector("code")
+    NSInteger code();
+
+    ///A string containing the error domain.
+    @selector("domain")
+    NSErrorDomain domain();
+
+
+    ///A string containing the localized description of the error.
+    @selector("localizedDescription")
+    NSString localizedDescription();
+
+    ///An array containing the localized titles of buttons appropriate for displaying in an alert panel.
+    @selector("localizedRecoveryOptions")
+    NSArray_!NSString _localizedRecoveryOptions();
+
+    extern(D) final NSArrayD!NSString localizedRecoveryOptions()
+    {
+        return NSArrayD!NSString(_localizedRecoveryOptions);
+    }
+
+    ///A string containing the localized recovery suggestion for the error.
+    @selector("localizedRecoverySuggestion")
+    NSString localizedRecoverySuggestion();
+
+    ///A string containing the localized explanation of the reason for the error.
+    @selector("localizedFailureReason")
+    NSString localizedFailureReason();
+
+
+    extern(D) final void print()
+    {
+        NSLog("Objective-C Error: %@".ns, this);
+    }
+}
 struct NSRange
 {
     NSUInteger length;

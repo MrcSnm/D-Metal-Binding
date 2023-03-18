@@ -268,6 +268,11 @@ enum MTLTextureCompressionType : NSInteger
 ///An object that you use to configure new Metal texture objects.
 extern class MTLTextureDescriptor : NSObject
 {
+    @selector("alloc")
+    override static MTLTextureDescriptor alloc();
+    @selector("init")
+    override MTLTextureDescriptor initialize();
+    
     ///Creates a texture descriptor object for a 2D texture.
     @selector("texture2DDescriptorWithPixelFormat:width:height:mipmapped:")
     static MTLTextureDescriptor texture2DDescriptorWithPixelFormat(

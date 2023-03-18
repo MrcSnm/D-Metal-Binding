@@ -630,6 +630,35 @@ version(D_ObjectiveC)
     {
 
     }
+
+    ///The render stages at which a synchronization command is triggered.
+    enum MTLRenderStages : NSUInteger
+    {
+        ///The vertex rendering stage.
+        Vertex = 1 << 0,
+        ///The fragment rendering stage.
+        Fragment = 1 << 1,
+        ///The tile rendering stage.
+        Tile = 1 << 2,
+        Mesh = 1 << 4,
+        Object = 1 << 3
+    }
+
+    ///An object that can capture, track, and manage resource dependencies across command encoders.
+    extern interface MTLFence
+    {
+        ///The device object that created the fence.
+        @selector("device")
+        MTLDevice device();
+
+        ///A string that identifies the fence.
+        @selector("label")
+        NSString label();
+
+        @selector("setLabel:")
+        NSString label(NSString);
+
+    }
     
 
     extern class MTLDevice
@@ -664,7 +693,9 @@ version(D_ObjectiveC)
         @selector("newDefaultLibrary")
         MTLLibrary newDefaultLibrary();
 
-
+        ///Creates a new memory fence instance.
+        @selector("newFence")
+        MTLFence newFence();
 
 
         ///Creates an input/output command queue you use to submit commands that load assets from the file system into GPU resources or system memory.
@@ -682,6 +713,9 @@ version(D_ObjectiveC)
         ///Creates a sampler state instance.
         MTLSamplerState newSamplerStateWithDescriptor(MTLSamplerDescriptor descriptor);
 
+        ///Returns the minimum alignment the GPU device requires to create a texture buffer from a buffer.
+        @selector("minimumTextureBufferAlignmentForPixelFormat:")
+        NSUInteger minimumTextureBufferAlignmentForPixelFormat(MTLPixelFormat);
 
     }
 

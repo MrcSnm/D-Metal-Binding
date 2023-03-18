@@ -157,13 +157,13 @@ extern interface MTLBlitCommandEncoder : MTLCommandEncoder
         NSUInteger level,
     );
 
-    // ///Encodes a command that instructs the GPU to update a fence, which can signal a pass that’s waiting for it.
-    // @selector("updateFence:")
-    // void updateFence(MTLFence);
+    ///Encodes a command that instructs the GPU to update a fence, which can signal a pass that’s waiting for it.
+    @selector("updateFence:")
+    void updateFence(MTLFence);
 
-    // ///Encodes a command that instructs the GPU to wait until a pass updates a fence.
-    // @selector("waitForFence:")
-    // void waitForFence(MTLFence);
+    ///Encodes a command that instructs the GPU to wait until a pass updates a fence.
+    @selector("waitForFence:")
+    void waitForFence(MTLFence);
 
     // ///Encodes a command that copies commands from one indirect command buffer into another.
     // @selector("copyIndirectCommandBuffer:sourceRange:destination:destinationIndex:")
