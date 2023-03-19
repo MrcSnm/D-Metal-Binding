@@ -711,6 +711,7 @@ version(D_ObjectiveC)
         BOOL supportsTextureSampleCount(NSUInteger sampleCount);
 
         ///Creates a sampler state instance.
+        @selector("newSamplerStateWithDescriptor:")
         MTLSamplerState newSamplerStateWithDescriptor(MTLSamplerDescriptor descriptor);
 
         ///Returns the minimum alignment the GPU device requires to create a texture buffer from a buffer.

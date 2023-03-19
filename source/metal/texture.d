@@ -188,6 +188,9 @@ extern interface MTLSamplerState
     ///A string that identifies the sampler.
     @selector("label")
     NSString label();
+
+    @selector("release")
+    void release();
 }
 
 ///A set of options to choose from when creating a texture swizzle pattern.
