@@ -849,6 +849,7 @@ version(D_ObjectiveC)
         NSString label(NSString);
     }
     
+    ///An encoder that writes GPU commands into a command buffer.
     extern interface MTLCommandEncoder
     {
         ///Declares that all command generation from the encoder is completed.
@@ -948,17 +949,12 @@ version(D_ObjectiveC)
     }
     
     ///A structure that contains width and height values.
-    extern struct CGSize
+    struct CGSize
     {
-        double width;
-        double height;
+        double width = 0;
+        double height = 0;
         /// The size whose width and height are both zero.
         enum zero = CGSize(0, 0);
-        
-        /// Creates a size with zero width and height.
-        @selector("init")
-        MTLRenderPipelineDescriptor initialize();
-        alias ini = initialize;
     }
     
     /**
