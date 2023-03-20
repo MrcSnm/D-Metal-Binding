@@ -147,21 +147,32 @@ version(D_ObjectiveC)
     extern class MTLRenderPassAttachmentDescriptor : NSObject
     {
     }
-
-    enum MTLLoadAction: uint
+    
+    ///Types of actions performed for an attachment at the start of a rendering pass.
+    enum MTLLoadAction: NSUInteger
     {
-        DontCare,
-        Load,
-        Clear,
+        ///The GPU has permission to discard the existing contents of the attachment at the start of the render pass, replacing them with arbitrary data.
+        DontCare = 0,
+        ///The GPU preserves the existing contents of the attachment at the start of the render pass.
+        Load = 1,
+        ///The GPU writes a value to every pixel in the attachment at the start of the render pass.
+        Clear = 2,
     }
-
-    enum MTLStoreAction: uint
+    
+    ///Types of actions performed for an attachment at the end of a rendering pass.
+    enum MTLStoreAction: NSUInteger
     {
-        DontCare,
-        Store,
-        MultisampleResolve,
-        StoreAndMultisampleResolve,
-        Unknown,
+        ///The GPU has permission to discard the rendered contents of the attachment at the end of the render pass, replacing them with arbitrary data.
+        DontCare = 0,
+        ///The GPU stores the rendered contents to the texture.
+        Store = 1,
+        ///The GPU resolves the multisampled data to one sample per pixel and stores the data to the resolve texture, discarding the multisample data afterwards.
+        MultisampleResolve = 2,
+        ///The GPU stores the multisample data to the multisample texture, resolves the data to a sample per pixel, and stores the data to the resolve texture.
+        StoreAndMultisampleResolve = 3,
+        ///The app will specify the store action when it encodes the render pass.
+        Unknown = 4,
+        ///The GPU stores depth data in a sample-position–agnostic representation.
         CustomSampleDepthStore,
     }
 
