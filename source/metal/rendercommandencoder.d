@@ -78,7 +78,7 @@ struct MTLVertexAmplificationViewMapping
     uint viewportArrayIndexOffset;
 }
 
-extern class MTLRenderCommandEncoder
+extern interface MTLRenderCommandEncoder : MTLCommandEncoder
 {
     @selector("setViewport:")
     void setViewport(MTLViewport);
