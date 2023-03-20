@@ -383,6 +383,64 @@ version(D_ObjectiveC)
         void setObjectAtIndexedSubscript(MTLRenderPassSampleBufferAttachmentDescriptor attachment, NSUInteger attachmentIndex);
     }
 
+    ///A depth and stencil state object that specifies the depth and stencil configuration and operations used in a render pass.
+    extern interface MTLDepthStencilState
+    {
+        ///The device from which this state object was created.
+        @selector("device")
+        MTLDevice device();
+
+        ///A string that identifies this object.
+        @selector("label")
+        NSString label();
+    }
+
+    ///An object that configures new MTLDepthStencilState objects.
+    extern class MTLDepthStencilDescriptor : NSObject
+    {
+        @selector("alloc")
+        override static MTLDepthStencilDescriptor alloc();
+
+        @selector("init")
+        override MTLDepthStencilDescriptor initialize(); 
+        alias ini = initialize;
+
+        ///The comparison that is performed between a fragment’s depth value and the depth value in the attachment, which determines whether to discard the fragment.
+        @selector("depthCompareFunction")
+        MTLCompareFunction depthCompareFunction();
+        @selector("setDepthCompareFunction:")
+        MTLCompareFunction depthCompareFunction(MTLCompareFunction);
+
+        ///A Boolean value that indicates whether depth values can be written to the depth attachment.
+        @selector("depthWriteEnabled")
+        BOOL depthWriteEnabled();
+        @selector("setDepthWriteEnabled:")
+        BOOL depthWriteEnabled(BOOL);
+        alias isDepthWriteEnabled = depthWriteEnabled;
+
+        // ///The stencil descriptor for back-facing primitives.
+        // @selector("backFaceStencil")
+        // MTLStencilDescriptor backFaceStencil();
+        // @selector("setBackFaceStencil:")
+        // MTLStencilDescriptor backFaceStencil(MTLStencilDescriptor);
+
+        // ///The stencil descriptor for front-facing primitives.
+        // @selector("frontFaceStencil")
+        // MTLStencilDescriptor frontFaceStencil();
+        // @selector("setFrontFaceStencil:")
+        // MTLStencilDescriptor frontFaceStencil(MTLStencilDescriptor);
+
+        ///A string that identifies this object.
+        @selector("label")
+        NSString label();
+        @selector("setLabel:")
+        NSString label(NSString);
+
+
+    }
+
+
+
     ///A group of render targets that hold the results of a render pass.
     extern class MTLRenderPassDescriptor
     {
