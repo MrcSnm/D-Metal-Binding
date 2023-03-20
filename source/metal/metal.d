@@ -920,6 +920,12 @@ version(D_ObjectiveC)
         @selector("length")
         NSUInteger length();
 
+        @selector("retain")
+        void retain();
+
+        @selector("release")
+        void release();
+
         @selector("dealloc")
         void dealloc();
     }
