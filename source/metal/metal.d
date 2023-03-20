@@ -148,6 +148,23 @@ version(D_ObjectiveC)
     {
     }
 
+    enum MTLLoadAction: uint
+    {
+        DontCare,
+        Load,
+        Clear,
+    }
+
+    enum MTLStoreAction: uint
+    {
+        DontCare,
+        Store,
+        MultisampleResolve,
+        StoreAndMultisampleResolve,
+        Unknown,
+        CustomSampleDepthStore,
+    }
+
     extern class MTLRenderPassColorAttachmentDescriptor : MTLRenderPassAttachmentDescriptor
     {
         ///The color to use when clearing the color attachment.
@@ -155,6 +172,21 @@ version(D_ObjectiveC)
         MTLClearColor clearColor();
         @selector("setClearColor:")
         MTLClearColor clearColor(MTLClearColor);
+        
+        @selector("texture")
+        MTLTexture texture();
+        @selector("setTexture:")
+        MTLTexture texture(MTLTexture);
+        
+        @selector("loadAction")
+        MTLLoadAction loadAction();
+        @selector("setLoadAction:")
+        MTLLoadAction loadAction(MTLLoadAction);
+        
+        @selector("storeAction")
+        MTLStoreAction storeAction();
+        @selector("setStoreAction:")
+        MTLStoreAction storeAction(MTLStoreAction);
     }
 
     extern class MTLRenderPassColorAttachmentDescriptorArray : NSObject
@@ -343,6 +375,9 @@ version(D_ObjectiveC)
     ///A group of render targets that hold the results of a render pass.
     extern class MTLRenderPassDescriptor
     {
+        @selector("new")
+        static MTLRenderPassDescriptor new_();
+        
         ///Creates a default render pass descriptor.
         @selector("renderPassDescriptor")
         static MTLRenderPassDescriptor renderPassDescriptor();
@@ -508,8 +543,10 @@ version(D_ObjectiveC)
     extern class MTLRenderPipelineColorAttachmentDescriptor
     {
         ///The pixel format of the color attachment’s texture.
-        MTLPixelFormat pixelFormat() @selector("pixelFormat");
-        MTLPixelFormat pixelFormat(MTLPixelFormat) @selector("setPixelFormat:");
+        @selector("pixelFormat")
+        MTLPixelFormat pixelFormat();
+        @selector("setPixelFormat:")
+        MTLPixelFormat pixelFormat(MTLPixelFormat);
 
         ///A bitmask that restricts which color channels are written into the texture.
         @selector("writeMask")
@@ -568,6 +605,7 @@ version(D_ObjectiveC)
     {
         override static MTLRenderPipelineColorAttachmentDescriptorArray alloc() @selector("alloc");
         override MTLRenderPipelineColorAttachmentDescriptorArray initialize() @selector("init");
+        alias ini = initialize;
 
         @selector("setObject:atIndexedSubscript:")
         void setObjectAtIndexedSubscript(MTLRenderPipelineColorAttachmentDescriptor attachment, NSUInteger attachmentIndex);
@@ -590,6 +628,7 @@ version(D_ObjectiveC)
         // mixin ObjectiveCOpCall;
         override static MTLRenderPipelineDescriptor alloc() @selector("alloc");
         override MTLRenderPipelineDescriptor initialize() @selector("init");
+        alias ini = initialize;
 
         ///A string that identifies the render pipeline descriptor.
         NSString label() @selector("label");
@@ -884,4 +923,51 @@ version(D_ObjectiveC)
         @selector("label")
         NSString label();
     }
+
+    extern class CALayer : NSObject
+    {
+    }
+
+    extern class CAMetalLayer : CALayer
+    {
+        @selector("pixelFormat")
+        MTLPixelFormat pixelFormat();
+        @selector("setPixelFormat:")
+        MTLPixelFormat pixelFormat(MTLPixelFormat);
+
+        @selector("device")
+        MTLDevice device();
+
+        @selector("drawableSize")
+        CGSize drawableSize();
+        @selector("drawableSize:")
+        CGSize drawableSize(CGSize);
+        
+        @selector("nextDrawable")
+        CAMetalDrawable nextDrawable();
+    }
+    
+    ///A structure that contains width and height values.
+    extern struct CGSize
+    {
+        double width;
+        double height;
+        /// The size whose width and height are both zero.
+        enum zero = CGSize(0, 0);
+        
+        /// Creates a size with zero width and height.
+        @selector("init")
+        MTLRenderPipelineDescriptor initialize();
+        alias ini = initialize;
+    }
+    
+    /**
+    Returns a size with the specified dimension values.
+    
+    Params:
+        width = A width value.
+        height = A height value.
+    Returns: Returns a CGSize structure with the specified width and height.
+    */
+    CGSize CGSizeMake(float width, float height);
 }
