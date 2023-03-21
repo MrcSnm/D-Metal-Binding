@@ -99,6 +99,10 @@ extern interface MTLRenderCommandEncoder : MTLCommandEncoder
     @selector("setCullMode:")
     void setCullMode(MTLCullMode);
 
+    ///Sets the depth and stencil test state.
+    @selector("setDepthStencilState:")
+    void setDepthStencilState(MTLDepthStencilState);
+
     ///Sets a buffer for the vertex function.
     @selector("setVertexBuffer:offset:atIndex:")
     void setVertexBuffer(MTLBuffer vertexBuffer, NSUInteger offset, NSUInteger index);
