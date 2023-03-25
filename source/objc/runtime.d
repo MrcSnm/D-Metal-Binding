@@ -11,6 +11,14 @@ private bool isValidObjectiveCNumber(T)()
 }
 
 ////ns Helper Section////
+/**
+*   .ns can be used as a postfix to convert almost any type to its Objective-C representation.
+*   Currently it supports:
+    - string
+    - numbers
+    - associative arrays
+    - identity (used on any object that extends NSObject will return itself)
+*/
 
 NSString ns(string str)
 {
@@ -21,6 +29,8 @@ NSString ns(string str)
 }
 ///Identity. Always return the object itself if it inherits from NSObject
 T ns(T)(T value) if(is(T : NSObject)){return value;}
+
+NSMutableDictionaryD!(K, V) ns(K, V)(V[K] aa){return NSMutableDictionaryD!(K, V)(aa);}
 
 NSNumberD!T ns(T)(T value) if(isValidObjectiveCNumber!T)
 {
