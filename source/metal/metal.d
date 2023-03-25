@@ -874,6 +874,15 @@ version(D_ObjectiveC)
         ///Represents the Mac family 1 GPU features. deprecated
         Mac1 = 2001
     }
+
+    ///The values that determine the limits and capabilities of argument buffers.
+    enum MTLArgumentBuffersTier : NSUInteger
+    {
+        ///Tier 1 argument buffers are supported on all iOS, tvOS, and macOS GPUs.
+        Tier1 = 0,
+        ///Tier 2 argument buffers are supported on all macOS discrete GPUs.
+        Tier2 = 1
+    }
     
     ///The main Metal interface to a GPU that apps use to draw graphics and run computations in parallel.
     extern interface MTLDevice
@@ -885,6 +894,11 @@ version(D_ObjectiveC)
         ///Returns a Boolean value that indicates whether the GPU device supports the feature set of a specific GPU family.
         @selector("supportsFamily:")
         BOOL supportsFamily(MTLGPUFamily);
+
+        ///Returns the GPU device’s support tier for argument buffers.
+        @selector("argumentBuffersSupport")
+        MTLArgumentBuffersTier argumentBuffersSupport();
+
 
         ///Creates a queue you use to submit rendering and computation commands to a GPU.
         @selector("newCommandQueue")

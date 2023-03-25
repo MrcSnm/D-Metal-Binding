@@ -2,6 +2,16 @@ module objc.runtime;
 
 version(D_ObjectiveC):
 
+private bool isValidObjectiveCNumber(T)()
+{
+    return  is(T == BOOL) || is(T == byte) || is(T == ubyte)  ||
+            is(T == short) || is(T == ushort) ||
+            is(T == int) || is(T == uint) ||
+            is(T == long) || is(T == ulong);
+}
+
+////ns Helper Section////
+
 NSString ns(string str)
 {
     import core.memory;
@@ -9,6 +19,16 @@ NSString ns(string str)
     // scope(exit) GC.free(cast(void*)str.ptr);
     return NSString.alloc.initWithUTF8String(str.ptr);
 }
+///Identity. Always return the object itself if it inherits from NSObject
+T ns(T)(T value) if(is(T : NSObject)){return value;}
+
+NSNumberD!T ns(T)(T value) if(isValidObjectiveCNumber!T)
+{
+    return NSNumberD!T(value);
+}
+
+////End ns Helper Section////
+
 
 
 extern(Objective-C):
@@ -49,6 +69,47 @@ extern class NSObject
 
 }
 
+///A simple container for a single C or Objective-C data item.
+extern class NSValue : NSObject
+{
+
+}
+
+private void* _D4objc7runtime8NSNumber7__ClassZ = null;
+///An object wrapper for primitive scalar numeric values.
+extern class NSNumber : NSValue
+{
+    @selector("numberWithBool:") static NSNumber opCall(BOOL);
+    @selector("numberWithChar:") static NSNumber opCall(byte);
+    @selector("numberWithDouble:") static NSNumber opCall(double);
+    @selector("numberWithFloat:") static NSNumber opCall(float);
+    @selector("numberWithInt:") static NSNumber opCall(int);
+    @selector("numberWithLongLong:") static NSNumber opCall(long);
+    @selector("numberWithShort:") static NSNumber opCall(short);
+    @selector("numberWithUnsignedChar:") static NSNumber opCall(ubyte);
+    @selector("numberWithUnsignedInt:") static NSNumber opCall(uint);
+    @selector("numberWithUnsignedLongLong:") static NSNumber opCall(ulong);
+    @selector("numberWithUnsignedShort:") static NSNumber opCall(ushort);
+
+    @selector("boolValue") BOOL boolValue();
+    @selector("charValue") byte charValue();
+    @selector("doubleValue") double doubleValue();
+    @selector("floatValue") float floatValue();
+    @selector("intValue") int intValue();
+    @selector("longLongValue") long longValue();
+    @selector("shortValue") short shortValue();
+    @selector("unsignedCharValue") ubyte ubyteValue();
+    @selector("unsignedIntValue") uint uintValue();
+    @selector("unsignedLongLongValue") ulong ulongValue();
+    @selector("unsignedShortValue") ushort ushortValue();
+}
+struct NSNumberD(T) if(isValidObjectiveCNumber!T)
+{
+    NSNumber num;
+    this(T t){num = NSNumber(t);}
+    alias num this;
+}
+
 /** 
  * Used for NSObjects. It will define a new
  *  alloc, init and an opCall for that.
@@ -68,8 +129,6 @@ mixin template ObjectiveCOpCall()
 
 extern(C) void NSLog(NSString str, ...);
 
-
-extern(Objective-C)
 extern class NSString
 {
     static NSString alloc() @selector("alloc");
@@ -167,7 +226,90 @@ struct NSArrayD(T)
 
 extern class NSDictionary : NSObject
 {
+    ///Creates an empty dictionary.
+    @selector("dictionary")
     static NSDictionary dictionary();
+
+    ///The number of entries in the dictionary.
+    @selector("count")
+    NSUInteger count();
+
+    ///A new array containing the dictionary’s keys, or an empty array if the dictionary has no entries.
+    @selector("allKeys")
+    NSArray allKeys();
+
+    ///A new array containing the dictionary’s values, or an empty array if the dictionary has no entries.
+    @selector("allValues")
+    NSArray allValues();
+
+    ///Returns the value associated with a given key.
+    @selector("objectForKey:")
+    NSObject objectForKey(NSObject);
+
+    ///Returns the value associated with a given key.
+    @selector("valueForKey:")
+    NSObject valueForKey(NSString);
+}
+
+
+private void* _D4objc7runtime19NSMutableDictionary7__ClassZ = null;
+///A dynamic collection of objects associated with unique keys.
+extern class NSMutableDictionary : NSDictionary
+{
+    @selector("dictionary")
+    override static NSMutableDictionary dictionary();
+
+    ///Creates and returns a mutable dictionary, initially giving it enough allocated memory to hold a given number of entries.
+    @selector("dictionaryWithCapacity:")
+    static NSMutableDictionary dictionaryWithCapacity(NSUInteger);
+
+    ///Adds a given key-value pair to the dictionary.
+    @selector("setObject:forKey:")
+    void setObject(NSObject, NSObject);
+
+    ///Adds a given key-value pair to the dictionary.
+    @selector("setValue:forKey:")
+    void setValue(NSObject, NSString);
+}
+
+struct NSMutableDictionaryD(Key, Value)
+{
+    static if(isValidObjectiveCNumber!Value)
+        alias RealValue = NSNumber;
+    else static if(is(Value == string))
+        alias RealValue = NSString;
+    else
+    {
+        static assert(is(Value : NSObject), "Unknown object of type ", Value, " receive");
+        alias RealValue = Value;
+    }
+
+    NSMutableDictionary dictionary;
+    this(NSMutableDictionary d){dictionary = d;}
+    this(scope Value[Key] kv)
+    {
+        dictionary = NSMutableDictionary.dictionaryWithCapacity(32);
+        foreach(key, value; kv)
+            opIndexAssign(value, key);
+    }
+
+    void opIndexAssign(Value v, Key k)
+    {
+        static if(is(Key == string) || is(Key == NSString))
+            dictionary.setValue(v.ns, k.ns);
+        else
+            dictionary.setObject(v.ns, k.ns);
+    }
+
+    RealValue opIndex(Key k)
+    {
+        static if(is(Key == string) || is(Key == NSString))
+            return cast(RealValue)cast(void*)dictionary.valueForKey(k.ns);
+        else
+            return cast(RealValue)cast(void*)dictionary.objectForKey(k.ns);
+    }
+
+    alias dictionary this;
 }
 
 alias NSErrorDomain = NSString;
