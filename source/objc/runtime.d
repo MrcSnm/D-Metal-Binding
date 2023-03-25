@@ -38,8 +38,12 @@ extern class NSObject
     NSObject initialize() @selector("init");
     ///Increments the receiver’s reference count.
     NSObject retain() @selector("retain");
+    ///Allocates a new instance of the receiving class, sends it an init message, and returns the initialized object.
+    NSObject new_() @selector("new");
     ///Decrements the receiver’s reference count.
     void release() @selector("release");
+    ///Deallocates the memory occupied by the receiver.
+    void dealloc() @selector("dealloc");
     ///Decrements the receiver’s retain count at the end of the current autorelease pool block.
     NSObject autorelease() @selector("autorelease");
 
@@ -71,9 +75,28 @@ extern class NSString
     static NSString alloc() @selector("alloc");
     NSString initWithUTF8String(in char* str) @selector("initWithUTF8String:");
 
-    static NSString stringWithCString(char* stringWithCString, size_t encoding);
+    @selector("stringWithCString:encoding:")
+    static NSString stringWithCString(const(char)* stringWithCString, size_t encoding);
+
+    ///Returns a string created by copying the data from a given C array of UTF8-encoded bytes.
+    @selector("stringWithUTF8String:")
+    static NSString stringWithUTF8String(const(char)* nullTerminatedCString);
+
+    ///A null-terminated UTF8 representation of the string.
+    @selector("UTF8String")
+    immutable(char)* UTF8String() @nogc const;
+
+
     static size_t defaultCStringEncoding();
     void release() @selector("release");
+
+    extern(D) final string toString() @nogc const
+    {
+        immutable(char)* ret = UTF8String();
+        size_t i = 0; while(ret[i++] != '\0'){}
+        if(i > 0) return ret[0..i-1];
+        return null;
+    }
 }
 
 private extern(C) void* _D4objc7runtime7NSArray7__ClassZ = null;

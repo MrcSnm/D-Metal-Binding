@@ -261,12 +261,12 @@ version(D_ObjectiveC)
         @selector("objectIndexedAtSubscript:")
         MTLRenderPassColorAttachmentDescriptor objectIndexedAtSubscript(NSUInteger attachmentIndex);
 
-        MTLRenderPassColorAttachmentDescriptor opIndex(NSUInteger index)
+        final extern(D) MTLRenderPassColorAttachmentDescriptor opIndex(NSUInteger index)
         {
             return objectIndexedAtSubscript(index);
         }
 
-        void opIndexAssign(MTLRenderPassColorAttachmentDescriptor attachment, NSUInteger index)
+        final extern(D) void opIndexAssign(MTLRenderPassColorAttachmentDescriptor attachment, NSUInteger index)
         {
             setObjectAtIndexedSubscript(attachment, index);
         }
@@ -841,12 +841,50 @@ version(D_ObjectiveC)
 
         @selector("setLabel:")
         NSString label(NSString);
+    }
 
+    enum MTLGPUFamily : NSInteger
+    {
+        ///Represents the Metal 3 features.
+        Metal3 = 5001,
+        ///Represents the Apple family 8 GPU features that correspond to the Apple A15 and M2 GPUs.
+        Apple8 = 1008,
+        ///Represents the Apple family 7 GPU features that correspond to the Apple A14 and M1 GPUs.
+        Apple7 = 1007,
+        ///Represents the Apple family 6 GPU features that correspond to the Apple A13 GPUs.
+        Apple6 = 1006,
+        ///Represents the Apple family 5 GPU features that correspond to the Apple A12 GPUs.
+        Apple5 = 1005,
+        ///Represents the Apple family 4 GPU features that correspond to the Apple A11 GPUs.
+        Apple4 = 1004,
+        ///Represents the Apple family 3 GPU features that correspond to the Apple A9 and A10 GPUs.
+        Apple3 = 1003,
+        ///Represents the Apple family 2 GPU features that correspond to the Apple A8 GPUs.
+        Apple2 = 1002,
+        ///Represents the Apple family 1 GPU features that correspond to the Apple A7 GPUs.
+        Apple1 = 1001,
+        ///Represents the Common family 3 GPU features.
+        Common3 = 3003,
+        ///Represents the Common family 2 GPU features.
+        Common2 = 3002,
+        ///Represents the Common family 1 GPU features.
+        Common1 = 3001,
+        ///Represents the Mac family 2 GPU features.
+        Mac2 = 2002,
+        ///Represents the Mac family 1 GPU features. deprecated
+        Mac1 = 2001
     }
     
     ///The main Metal interface to a GPU that apps use to draw graphics and run computations in parallel.
     extern interface MTLDevice
     {
+        ///The full name of the GPU device.
+        @selector("name")
+        NSString name();
+
+        ///Returns a Boolean value that indicates whether the GPU device supports the feature set of a specific GPU family.
+        @selector("supportsFamily:")
+        BOOL supportsFamily(MTLGPUFamily);
 
         ///Creates a queue you use to submit rendering and computation commands to a GPU.
         @selector("newCommandQueue")

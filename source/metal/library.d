@@ -6,19 +6,18 @@ import metal.metal;
 
 extern(Objective-C):
 
-enum MTLLanguageVersion
+enum MTLLanguageVersion : NSUInteger
 {
-    deprecated
-    _1_0 = 1 << 16 + 0,
-    _1_1 = 1 << 16 + 1,
-    _1_2 = 1 << 16 + 2,
-    _2_0 = 2 << 16 + 0,
-    _2_1 = 2 << 16 + 1,
-    _2_2 = 2 << 16 + 2,
-    _2_3 = 2 << 16 + 3,
-    _2_4 = 2 << 16 + 4,
-    _3_0 = 3 << 16 + 0,
-
+    ///Deprecated
+    _1_0 = (1 << 16) + 0,
+    _1_1 = (1 << 16) + 1,
+    _1_2 = (1 << 16) + 2,
+    _2_0 = (2 << 16) + 0,
+    _2_1 = (2 << 16) + 1,
+    _2_2 = (2 << 16) + 2,
+    _2_3 = (2 << 16) + 3,
+    _2_4 = (2 << 16) + 4,
+    _3_0 = (3 << 16) + 0,
 }
 
 enum MTLLibraryOptimizationLevel : NSInteger
@@ -44,6 +43,7 @@ extern class MTLCompileOptions : NSObject
     override static MTLCompileOptions alloc();
     @selector("init")
     override MTLCompileOptions initialize();
+    alias ini = initialize;
 
     ///A Boolean value that indicates whether the compiler can perform optimizations for floating-point arithmetic that may violate the IEEE 754 standard.
     @selector("fastMathEnabled")
