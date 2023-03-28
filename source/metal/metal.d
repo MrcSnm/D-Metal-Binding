@@ -1154,7 +1154,18 @@ version(D_ObjectiveC)
         @selector("nextDrawable")
         CAMetalDrawable nextDrawable();
     }
+    ///The basic type for all floating-point values.
+    version(watchOS)
+        alias CGFloat = float;
+    else
+        alias CGFloat = double;
     
+    ///A structure that contains a point in a two-dimensional coordinate system.
+    struct CGPoint
+    {
+        CGFloat x = 0, y = 0;
+        enum zero = CGPoint(0,0);
+    }    
     ///A structure that contains width and height values.
     struct CGSize
     {
@@ -1162,6 +1173,12 @@ version(D_ObjectiveC)
         double height = 0;
         /// The size whose width and height are both zero.
         enum zero = CGSize(0, 0);
+    }
+    ///A structure that contains the location and dimensions of a rectangle.
+    struct CGRect
+    {
+        CGPoint origin;
+        CGSize size;
     }
     
     /**

@@ -179,6 +179,7 @@ extern class MTLSamplerDescriptor : NSObject
 }
 
 private extern(C) MTLSamplerState _D41TypeInfo_C5metal7texture15MTLSamplerState6__initZ = null;
+private extern(C) void* _D5metal7texture15MTLSamplerState11__InterfaceZ = null;
 ///An object that defines how a texture should be sampled.
 extern interface MTLSamplerState
 {
@@ -396,6 +397,7 @@ extern class MTLTextureDescriptor : NSObject
 }
 
 private extern(C) void* _D36TypeInfo_C5metal7texture10MTLTexture6__initZ = null;
+private extern(C) void* _D5metal7texture10MTLTexture11__InterfaceZ = null;
 ///A resource that holds formatted image data.
 extern interface MTLTexture
 {

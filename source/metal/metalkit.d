@@ -12,6 +12,13 @@ extern class MTKView
     @selector("currentRenderPassDescriptor")
     MTLRenderPassDescriptor currentRenderPassDescriptor();
 
+    ///The view’s frame rectangle, which defines its position and size in its superview’s coordinate system.
+    @selector("frame")
+    CGRect frame();
+    @selector("setFrame:")
+    CGRect frame(CGRect);
+
+
     ///The drawable to use for the current frame.
     @selector("currentDrawable")
     CAMetalDrawable currentDrawable();
