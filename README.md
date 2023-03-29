@@ -25,3 +25,13 @@ documentation on function purposes. It is the type you use for interfacing with 
 2. NSArrayD(T): This is a structt that wraps a NSArray with `alias arr this`. It is strongly typed for keeping
 your code less error prone. It also wraps `opIndex` and `opApply` for being able to use the foreach and index
 operators.
+
+
+This binding was even further extended to make Objective-C interfacing easier. Whenever needing to interface to Objective-C via NSDictionary, NSArray, NSString, NSNumber or other kind of objects that D can easily simulate, you can just append `.ns` to your type. The following style is used to create a macro dictionary from D side:
+
+```d
+MTLCompileOptions opts = MTLCompileOptions.alloc.initialize;
+opts.preprocessorMacros = ["ARGS_TIER2": 0].ns;
+```
+
+This way, there's no need to kep dealing all the time with Objective-C API.
