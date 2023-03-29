@@ -91,9 +91,9 @@ version(D_ObjectiveC)
     
     extern interface MTLRenderPipelineState
     {
+        void release() @selector("release"); 
         MTLDevice device() @selector("device");
         NSString label() @selector("label");
-
     }
 
     enum MTLTriangleFillMode : NSUInteger
