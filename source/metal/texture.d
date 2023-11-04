@@ -1,7 +1,7 @@
 module metal.texture;
-
+import objc.meta: selector, ObjcExtend;
 version(D_ObjectiveC):
-extern(Objective-C):
+@ObjectiveC:
 
 import metal.metal;
 import metal.pixelformat;
@@ -78,10 +78,11 @@ enum MTLCompareFunction : NSUInteger
 }
 
 ///An object that you use to configure a texture sampler.
-extern class MTLSamplerDescriptor : NSObject
+class MTLSamplerDescriptor : NSObject
 {
+    mixin ObjcExtend;
     @selector("alloc")
-    override static MTLSamplerDescriptor alloc();
+    static MTLSamplerDescriptor alloc();
     @selector("init")
     override MTLSamplerDescriptor initialize();
 
@@ -181,7 +182,7 @@ extern class MTLSamplerDescriptor : NSObject
 private extern(C) MTLSamplerState _D41TypeInfo_C5metal7texture15MTLSamplerState6__initZ = null;
 private extern(C) void* _D5metal7texture15MTLSamplerState11__InterfaceZ = null;
 ///An object that defines how a texture should be sampled.
-extern interface MTLSamplerState
+interface MTLSamplerState
 {
     ///The device object that created the sampler.
     @selector("device")
@@ -271,10 +272,11 @@ enum MTLTextureCompressionType : NSInteger
 }
 
 ///An object that you use to configure new Metal texture objects.
-extern class MTLTextureDescriptor : NSObject
+class MTLTextureDescriptor : NSObject
 {
+    mixin ObjcExtend;
     @selector("alloc")
-    override static MTLTextureDescriptor alloc();
+    static MTLTextureDescriptor alloc();
     @selector("init")
     override MTLTextureDescriptor initialize();
     
@@ -399,7 +401,7 @@ extern class MTLTextureDescriptor : NSObject
 private extern(C) void* _D36TypeInfo_C5metal7texture10MTLTexture6__initZ = null;
 private extern(C) void* _D5metal7texture10MTLTexture11__InterfaceZ = null;
 ///A resource that holds formatted image data.
-extern interface MTLTexture
+interface MTLTexture
 {
     ///Copies pixel data into a section of a texture slice.
     @selector("replaceRegion:mipmapLevel:slice:withBytes:bytesPerRow:bytesPerImage:")

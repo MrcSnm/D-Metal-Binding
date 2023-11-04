@@ -1,7 +1,8 @@
 module metal.rendercommandencoder;
+import objc.meta: selector;
 
 version(D_ObjectiveC):
-extern(Objective-C):
+@ObjectiveC:
 import metal.metal;
 import metal.texture;
 
@@ -23,7 +24,7 @@ enum MTLFunctionType : NSUInteger
 }
 
 ///An object representing a function that you can add to a visible function table.
-extern interface MTLFunctionHandle
+interface MTLFunctionHandle
 {
     ///The device object that created the shader function.
     @selector("device")
@@ -39,7 +40,7 @@ extern interface MTLFunctionHandle
 }
 
 ///A collection of model data for GPU-accelerated intersection of rays with the model.
-extern interface MTLAccelerationStructure
+interface MTLAccelerationStructure
 {
     ///The size of the acceleration structure’s memory allocation, in bytes.
     @selector("size")
@@ -49,7 +50,7 @@ extern interface MTLAccelerationStructure
 }
 
 ///A table of intersection functions that Metal calls to perform ray-tracing intersection tests.
-extern interface MTLIntersectionFunctionTable
+interface MTLIntersectionFunctionTable
 {
     ///Sets an entry in the table.
     @selector("setFunction:atIndex:")
@@ -57,7 +58,7 @@ extern interface MTLIntersectionFunctionTable
 }
 
 ///A table of shader functions visible to your app that you can pass into compute commands to customize the behavior of a shader.
-extern interface MTLVisibleFunctionTable
+interface MTLVisibleFunctionTable
 {
     ///Sets a table entry to point to a callable function.
     @selector("setFunction:atIndex:")
@@ -78,7 +79,7 @@ struct MTLVertexAmplificationViewMapping
     uint viewportArrayIndexOffset;
 }
 
-extern interface MTLRenderCommandEncoder : MTLCommandEncoder
+interface MTLRenderCommandEncoder : MTLCommandEncoder
 {
     @selector("setViewport:")
     void setViewport(MTLViewport);

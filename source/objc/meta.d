@@ -1,7 +1,6 @@
 module objc.meta;
 version(D_ObjectiveC):
 import std.traits;
-
 extern(C)
 {
     import core.vararg;
@@ -17,6 +16,17 @@ extern(C)
 struct ObjectiveC;
 struct selector{string sel;}
 alias SEL = void*;
+
+
+bool isAlias(T, string member)()
+{
+    return __traits(identifier, __traits(getMember, T, member)) != member ||
+        !(__traits(isSame, T, __traits(parent, __traits(getMember, T, member))));
+}
+bool isAliasModule(alias T, string member)()
+{
+    return __traits(identifier, __traits(getMember, T, member)) != member;
+}
 
 
 string _ObjcGetMsgSend(alias Fn, string arg, bool sliceFirst)()
@@ -44,16 +54,21 @@ string _ObjcGetMsgSuperSend(alias Fn, string arg, bool sliceFirst)()
 
 mixin template ObjcExtend()
 {
+    import std.traits:ReturnType, Parameters;
+    import objc.meta:isAlias;
     override
     {
         static foreach(mem; __traits(derivedMembers, typeof(super)))
         {
-            static foreach(ov; __traits(getOverloads, typeof(super), mem))
+            static if(!isAlias!(typeof(super), mem))
             {
-                static if(!__traits(isStaticFunction, ov) && !__traits(isFinalFunction, ov))
+                static foreach(ov; __traits(getOverloads, typeof(super), mem))
                 {
-                    @selector(__traits(getAttributes, ov)[0].sel)
-                    mixin("ReturnType!ov ",mem,"(Parameters!ov);");
+                    static if(!__traits(isStaticFunction, ov) && !__traits(isFinalFunction, ov))
+                    {
+                        @selector(__traits(getAttributes, ov)[0].sel)
+                        mixin("ReturnType!ov ",mem,"(Parameters!ov);");
+                    }
                 }
             }
         }
@@ -63,39 +78,43 @@ mixin template ObjcExtend()
 mixin template ObjcLink(Class)
 {
     import std.traits;
+    import objc.meta;
     mixin("private void* ",Class.stringof,"_;");
     static foreach(mem; __traits(derivedMembers, Class))
     {
-        static foreach(ov; __traits(getOverloads, Class, mem))
+        static if(!isAlias!(Class, mem))
         {
-            static if(!__traits(isFinalFunction, ov))
+            static foreach(ov; __traits(getOverloads, Class, mem))
             {
-                static if(__traits(isOverrideFunction, ov))
+                static if(!__traits(isFinalFunction, ov))
                 {
-                    mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
-                    "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
-                    "static SEL s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                    _ObjcGetMsgSuperSend!(ov, Class.stringof~"_", false),
-                    "}");
-                }
-                else static if(__traits(isStaticFunction, ov))
-                {
-                    mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
-                    "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
-                    "static SEL s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                    _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
-                    "}");
-                }
-                else
-                {
-                    mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
-                    "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
-                    "static SEL s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                    _ObjcGetMsgSend!(ov, "self", true),
-                    "}");
+                    static if(__traits(isOverrideFunction, ov))
+                    {
+                        mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
+                        "{",
+                        "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
+                        "static SEL s; if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
+                        _ObjcGetMsgSuperSend!(ov, Class.stringof~"_", false),
+                        "}");
+                    }
+                    else static if(__traits(isStaticFunction, ov))
+                    {
+                        mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
+                        "{",
+                        "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
+                        "static SEL s; if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
+                        _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
+                        "}");
+                    }
+                    else
+                    {
+                        mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
+                        "{",
+                        "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
+                        "static SEL s; if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
+                        _ObjcGetMsgSend!(ov, "self", true),
+                        "}");
+                    }
                 }
             }
         }
@@ -109,21 +128,27 @@ mixin template ObjcLinkModule(alias _module)
     {
         static if(is(__traits(getMember, _module, mem) == class) || is(__traits(getMember, _module, mem) == interface))
         {
-            mixin ObjcLink!(__traits(getMember, _module, mem));
+            static if(!isAliasModule!(_module, mem))
+                mixin ObjcLink!(__traits(getMember, _module, mem));
         }
     }
 
     static this()
     {
         //Initialize the module.
-        import std.traits;
         static foreach(mem; __traits(allMembers, _module))
         {{
             alias modMem = __traits(getMember, _module, mem);
-            static if(is(modMem == class) && hasUDA!(modMem, ObjectiveC))
-                mixin(mem,"_ = objc_getClass(mem);");
-            else static if(is(modMem == interface) && hasUDA!(modMem, ObjectiveC))
-                mixin(mem,"_ = objc_getProtocol(mem);");
+            static if(is(modMem == class) || is(modMem == interface))
+            {
+                static if(!isAliasModule!(_module, mem))
+                {
+                    static if(is(modMem == class) && hasUDA!(modMem, ObjectiveC))
+                        mixin(mem,"_ = objc_getClass(mem);");
+                    else static if(is(modMem == interface) && hasUDA!(modMem, ObjectiveC))
+                        mixin(mem,"_ = objc_getProtocol(mem);");
+                }
+            }
         }}
     }
 }

@@ -1,12 +1,11 @@
 module metal.metalkit;
 
 import metal.metal;
-
+import objc.meta : selector;
 version(D_ObjectiveC):
-extern(Objective-C):
+@ObjectiveC:
 
-
-extern class MTKView
+class MTKView
 {
     ///Creates a render pass descriptor to draw into the current drawable.
     @selector("currentRenderPassDescriptor")

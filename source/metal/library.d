@@ -1,11 +1,10 @@
 module metal.library;
 version(D_ObjectiveC): 
 public import objc.runtime;
+import objc.meta : selector, ObjcExtend;
 import metal.metal;
 
-
-extern(Objective-C):
-
+@ObjectiveC:
 enum MTLLanguageVersion : NSUInteger
 {
     ///Deprecated
@@ -37,12 +36,15 @@ enum MTLLibraryType : NSInteger
 }
 
 
-extern class MTLCompileOptions : NSObject
+class MTLCompileOptions : NSObject
 {
+    mixin ObjcExtend;
     @selector("alloc")
-    override static MTLCompileOptions alloc();
+    static MTLCompileOptions alloc();
+
     @selector("init")
     override MTLCompileOptions initialize();
+
     alias ini = initialize;
 
     ///A Boolean value that indicates whether the compiler can perform optimizations for floating-point arithmetic that may violate the IEEE 754 standard.
@@ -94,7 +96,7 @@ extern class MTLCompileOptions : NSObject
     NSString installName(NSString);
 }
 
-extern interface MTLLibrary
+interface MTLLibrary
 {
     ///The installation name for a dynamic library.
     @selector("installName")

@@ -1,6 +1,7 @@
 module objc.runtime;
-
 version(D_ObjectiveC):
+public import objc.meta : selector, ObjectiveC, ObjcExtend;
+
 
 private bool isValidObjectiveCNumber(T)()
 {
@@ -41,10 +42,8 @@ NSNumberD!T ns(T)(T value) if(isValidObjectiveCNumber!T)
 
 
 
-extern(Objective-C):
+@ObjectiveC:
 
-
-public import core.attribute:selector;
 alias BOOL = bool;
 enum YES = true;
 enum NO = false;
@@ -62,7 +61,7 @@ else
     alias NSInteger = long;
     alias NSUInteger = ulong;
 }
-extern class NSObject
+class NSObject
 {
     static NSObject alloc() @selector("alloc");
     NSObject initialize() @selector("init");
@@ -80,15 +79,16 @@ extern class NSObject
 }
 
 ///A simple container for a single C or Objective-C data item.
-extern class NSValue : NSObject
+class NSValue : NSObject
 {
-
+    mixin ObjcExtend;
 }
 
 private void* _D4objc7runtime8NSNumber7__ClassZ = null;
 ///An object wrapper for primitive scalar numeric values.
-extern class NSNumber : NSValue
+class NSNumber : NSValue
 {
+    mixin ObjcExtend;
     @selector("numberWithBool:") static NSNumber opCall(BOOL);
     @selector("numberWithChar:") static NSNumber opCall(byte);
     @selector("numberWithDouble:") static NSNumber opCall(double);
@@ -120,29 +120,12 @@ struct NSNumberD(T) if(isValidObjectiveCNumber!T)
     alias num this;
 }
 
-/** 
- * Used for NSObjects. It will define a new
- *  alloc, init and an opCall for that.
- */
-mixin template ObjectiveCOpCall()
-{
-    extern(Objective-C)
-    {
-        override static typeof(this) alloc() @selector("alloc");
-        override typeof(this) initialize() @selector("init");
-    }
-    extern(D) final static typeof(this) opCall()
-    {
-        return alloc.initialize;
-    }
-}
-
 extern(C) void NSLog(NSString str, ...);
 
-extern class NSString
+class NSString
 {
     static NSString alloc() @selector("alloc");
-    NSString initWithUTF8String(in char* str) @selector("initWithUTF8String:");
+    NSString initWithUTF8String(const(char)* str) @selector("initWithUTF8String:");
 
     @selector("stringWithCString:encoding:")
     static NSString stringWithCString(const(char)* stringWithCString, size_t encoding);
@@ -156,10 +139,11 @@ extern class NSString
     immutable(char)* UTF8String() @nogc const;
 
 
-    static size_t defaultCStringEncoding();
+    @selector("defaultCStringEncoding")
+    static NSUInteger defaultCStringEncoding();
     void release() @selector("release");
 
-    extern(D) final string toString() @nogc const
+    extern(D) override final string toString() @nogc const
     {
         immutable(char)* ret = UTF8String();
         size_t i = 0; while(ret[i++] != '\0'){}
@@ -169,8 +153,9 @@ extern class NSString
 }
 
 private extern(C) void* _D4objc7runtime7NSArray7__ClassZ = null;
-extern class NSArray : NSObject
+class NSArray : NSObject
 {
+    mixin ObjcExtend;
     NSArray init() @selector("init");
     ///Creates and returns an empty array.
     @selector("array")
@@ -234,8 +219,9 @@ struct NSArrayD(T)
     }
 }
 
-extern class NSDictionary : NSObject
+class NSDictionary : NSObject
 {
+    mixin ObjcExtend;
     ///Creates an empty dictionary.
     @selector("dictionary")
     static NSDictionary dictionary();
@@ -264,10 +250,11 @@ extern class NSDictionary : NSObject
 
 private void* _D4objc7runtime19NSMutableDictionary7__ClassZ = null;
 ///A dynamic collection of objects associated with unique keys.
-extern class NSMutableDictionary : NSDictionary
+class NSMutableDictionary : NSDictionary
 {
+    mixin ObjcExtend;
     @selector("dictionary")
-    override static NSMutableDictionary dictionary();
+    static NSMutableDictionary dictionary();
 
     ///Creates and returns a mutable dictionary, initially giving it enough allocated memory to hold a given number of entries.
     @selector("dictionaryWithCapacity:")
@@ -324,7 +311,7 @@ struct NSMutableDictionaryD(Key, Value)
 
 alias NSErrorDomain = NSString;
 
-extern class NSError
+class NSError
 {
     ///The error code
     @selector("code")
@@ -367,4 +354,7 @@ struct NSRange
     NSUInteger length;
     NSUInteger location;
 }
-extern class NSData : NSObject{}
+class NSData : NSObject
+{
+    mixin ObjcExtend;
+}

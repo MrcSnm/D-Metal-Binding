@@ -1,8 +1,9 @@
 module metal.vertexdescriptor;
 import objc.runtime;
+import objc.meta : selector, ObjcExtend;
 
 version(D_ObjectiveC):
-extern(Objective-C):
+@ObjectiveC:
 
 
 enum MTLVertexFormat : uint
@@ -115,8 +116,9 @@ enum MTLVertexFormat : uint
 
 
 ///An object that determines how to store attribute data in memory and map it to the arguments of a vertex function.
-extern class MTLVertexAttributeDescriptor : NSObject
+class MTLVertexAttributeDescriptor : NSObject
 {
+    mixin ObjcExtend;
     ///The format of the vertex attribute.
     @selector("format")
     MTLVertexFormat format();
@@ -137,8 +139,9 @@ extern class MTLVertexAttributeDescriptor : NSObject
     NSUInteger bufferIndex(NSUInteger);
 }
 
-extern class MTLVertexAttributeDescriptorArray : NSObject
+class MTLVertexAttributeDescriptorArray : NSObject
 {
+    mixin ObjcExtend;
     ///Returns the state of the specified vertex attribute.
     @selector("objectAtIndexedSubscript:")
     MTLVertexAttributeDescriptor objectAtIndexedSubscript(NSUInteger index);
@@ -173,8 +176,9 @@ enum MTLVertexStepFunction : NSUInteger
 }
 
 ///An object that configures how a render pipeline fetches data to send to the vertex function.
-extern class MTLVertexBufferLayoutDescriptor : NSObject
+class MTLVertexBufferLayoutDescriptor : NSObject
 {
+    mixin ObjcExtend;
     ///The circumstances under which the vertex and its attributes are presented to the vertex function.
     @selector("stepFunction")
     MTLVertexStepFunction stepFunction();
@@ -194,8 +198,9 @@ extern class MTLVertexBufferLayoutDescriptor : NSObject
     NSUInteger stride(NSUInteger);
 }
 
-extern class MTLVertexBufferLayoutDescriptorArray : NSObject
+class MTLVertexBufferLayoutDescriptorArray : NSObject
 {
+    mixin ObjcExtend;
     ///Returns the state of the specified vertex buffer layout.
     @selector("objectAtIndexedSubscript:")
     MTLVertexBufferLayoutDescriptor objectAtIndexedSubscript(NSUInteger index);
@@ -214,8 +219,9 @@ extern class MTLVertexBufferLayoutDescriptorArray : NSObject
     }
 }
 
-extern class MTLVertexDescriptor : NSObject
+class MTLVertexDescriptor : NSObject
 {
+    mixin ObjcExtend;
     ///Creates and returns a new vertex descriptor.
     static MTLVertexDescriptor vertexDescriptor() @selector("vertexDescriptor");
     ///Resets the default state for the vertex descriptor.
