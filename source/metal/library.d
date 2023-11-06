@@ -1,5 +1,4 @@
 module metal.library;
-version(D_ObjectiveC): 
 public import objc.runtime;
 import objc.meta : selector, ObjcExtend;
 import metal.metal;
@@ -36,14 +35,14 @@ enum MTLLibraryType : NSInteger
 }
 
 
-class MTLCompileOptions : NSObject
+class MTLCompileOptions
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     @selector("alloc")
     static MTLCompileOptions alloc();
 
     @selector("init")
-    override MTLCompileOptions initialize();
+    MTLCompileOptions initialize();
 
     alias ini = initialize;
 
@@ -108,7 +107,8 @@ interface MTLLibrary
     @selector("functionNames")
     NSArray_!NSString _functionNames();
     ///The names of all public functions in the library.
-    extern(D) final NSArrayD!NSString functionNames()
+
+    extern(D) final @D NSArrayD!NSString functionNames()
     {
         return NSArrayD!(NSString)(_functionNames);
     }

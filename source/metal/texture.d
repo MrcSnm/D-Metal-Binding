@@ -1,7 +1,6 @@
 module metal.texture;
 import objc.meta: selector, ObjcExtend;
-version(D_ObjectiveC):
-@ObjectiveC:
+@ObjectiveC final:
 
 import metal.metal;
 import metal.pixelformat;
@@ -78,13 +77,13 @@ enum MTLCompareFunction : NSUInteger
 }
 
 ///An object that you use to configure a texture sampler.
-class MTLSamplerDescriptor : NSObject
+class MTLSamplerDescriptor
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     @selector("alloc")
     static MTLSamplerDescriptor alloc();
     @selector("init")
-    override MTLSamplerDescriptor initialize();
+    MTLSamplerDescriptor initialize();
 
     ///A Boolean value that indicates whether texture coordinates are normalized to the range [0.0, 1.0].
     @selector("normalizedCoordinates")
@@ -179,8 +178,6 @@ class MTLSamplerDescriptor : NSObject
 
 }
 
-private extern(C) MTLSamplerState _D41TypeInfo_C5metal7texture15MTLSamplerState6__initZ = null;
-private extern(C) void* _D5metal7texture15MTLSamplerState11__InterfaceZ = null;
 ///An object that defines how a texture should be sampled.
 interface MTLSamplerState
 {
@@ -272,13 +269,13 @@ enum MTLTextureCompressionType : NSInteger
 }
 
 ///An object that you use to configure new Metal texture objects.
-class MTLTextureDescriptor : NSObject
+class MTLTextureDescriptor
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     @selector("alloc")
     static MTLTextureDescriptor alloc();
     @selector("init")
-    override MTLTextureDescriptor initialize();
+    MTLTextureDescriptor initialize();
     
     ///Creates a texture descriptor object for a 2D texture.
     @selector("texture2DDescriptorWithPixelFormat:width:height:mipmapped:")
@@ -398,8 +395,6 @@ class MTLTextureDescriptor : NSObject
 
 }
 
-private extern(C) void* _D36TypeInfo_C5metal7texture10MTLTexture6__initZ = null;
-private extern(C) void* _D5metal7texture10MTLTexture11__InterfaceZ = null;
 ///A resource that holds formatted image data.
 interface MTLTexture
 {

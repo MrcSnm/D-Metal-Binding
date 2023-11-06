@@ -1,5 +1,4 @@
 module objc.meta;
-version(D_ObjectiveC):
 import std.traits;
 extern(C)
 {
@@ -14,9 +13,10 @@ extern(C)
     SEL sel_registerName(const char* name);
 }
 struct ObjectiveC;
+struct D;
 struct selector{string sel;}
 alias SEL = void*;
-
+struct Super;
 
 bool isAlias(T, string member)()
 {
@@ -52,23 +52,20 @@ string _ObjcGetMsgSuperSend(alias Fn, string arg, bool sliceFirst)()
 }
 
 
-mixin template ObjcExtend()
+mixin template ObjcExtend(Classes...)
 {
     import std.traits:ReturnType, Parameters;
-    import objc.meta:isAlias;
-    override
+    import objc.meta:isAlias, Super;
+    static foreach(Class; Classes) static foreach(mem; __traits(derivedMembers, Class))
     {
-        static foreach(mem; __traits(derivedMembers, typeof(super)))
+        static if(!isAlias!(Class, mem) && !__traits(hasMember, typeof(this), mem))
         {
-            static if(!isAlias!(typeof(super), mem))
+            static foreach(ov; __traits(getOverloads, Class, mem))
             {
-                static foreach(ov; __traits(getOverloads, typeof(super), mem))
+                static if(!__traits(isStaticFunction, ov))
                 {
-                    static if(!__traits(isStaticFunction, ov) && !__traits(isFinalFunction, ov))
-                    {
-                        @selector(__traits(getAttributes, ov)[0].sel)
-                        mixin("ReturnType!ov ",mem,"(Parameters!ov);");
-                    }
+                    @selector(__traits(getAttributes, ov)[0].sel) @Super
+                    final mixin("ReturnType!ov ",mem,"(Parameters!ov);");
                 }
             }
         }
@@ -82,39 +79,41 @@ mixin template ObjcLink(Class)
     mixin("private void* ",Class.stringof,"_;");
     static foreach(mem; __traits(derivedMembers, Class))
     {
+        
         static if(!isAlias!(Class, mem))
+        static foreach(ov; __traits(getOverloads, Class, mem))
         {
-            static foreach(ov; __traits(getOverloads, Class, mem))
+            static if(__traits(getLinkage, ov) == "D" && !hasUDA!(ov, D))
             {
-                static if(!__traits(isFinalFunction, ov))
+                static if(hasUDA!(ov, Super))
                 {
-                    static if(__traits(isOverrideFunction, ov))
-                    {
-                        mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
-                        "{",
-                        "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
-                        "static SEL s; if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                        _ObjcGetMsgSuperSend!(ov, Class.stringof~"_", false),
-                        "}");
-                    }
-                    else static if(__traits(isStaticFunction, ov))
-                    {
-                        mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
-                        "{",
-                        "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
-                        "static SEL s; if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                        _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
-                        "}");
-                    }
-                    else
-                    {
-                        mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
-                        "{",
-                        "alias fn = extern(C) ReturnType!ov function (void*, SEL, ...);",
-                        "static SEL s; if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                        _ObjcGetMsgSend!(ov, "self", true),
-                        "}");
-                    }
+                    mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
+                    "{",
+                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "static SEL s;",
+                    "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
+                    _ObjcGetMsgSuperSend!(ov, "self", true),
+                    "}");
+                }
+                else static if(__traits(isStaticFunction, ov))
+                {
+                    mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
+                    "{",
+                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "static SEL s;",
+                    "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
+                    _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
+                    "}");
+                }
+                else
+                {
+                    mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
+                    "{",
+                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "static SEL s;",
+                    "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
+                    _ObjcGetMsgSend!(ov, "self", true),
+                    "}");
                 }
             }
         }

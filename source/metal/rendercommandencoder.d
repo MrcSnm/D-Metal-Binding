@@ -1,7 +1,6 @@
 module metal.rendercommandencoder;
-import objc.meta: selector;
+import objc.meta: selector, ObjcExtend;
 
-version(D_ObjectiveC):
 @ObjectiveC:
 import metal.metal;
 import metal.texture;
@@ -79,8 +78,9 @@ struct MTLVertexAmplificationViewMapping
     uint viewportArrayIndexOffset;
 }
 
-interface MTLRenderCommandEncoder : MTLCommandEncoder
+interface MTLRenderCommandEncoder
 {
+    mixin ObjcExtend!MTLCommandEncoder;
     @selector("setViewport:")
     void setViewport(MTLViewport);
 

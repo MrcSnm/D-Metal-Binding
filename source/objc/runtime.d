@@ -1,6 +1,5 @@
 module objc.runtime;
-version(D_ObjectiveC):
-public import objc.meta : selector, ObjectiveC, ObjcExtend;
+public import objc.meta : selector, ObjectiveC, ObjcExtend, D;
 
 
 private bool isValidObjectiveCNumber(T)()
@@ -42,7 +41,7 @@ NSNumberD!T ns(T)(T value) if(isValidObjectiveCNumber!T)
 
 
 
-@ObjectiveC:
+@ObjectiveC final:
 
 alias BOOL = bool;
 enum YES = true;
@@ -79,16 +78,16 @@ class NSObject
 }
 
 ///A simple container for a single C or Objective-C data item.
-class NSValue : NSObject
+class NSValue
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
 }
 
 private void* _D4objc7runtime8NSNumber7__ClassZ = null;
 ///An object wrapper for primitive scalar numeric values.
-class NSNumber : NSValue
+class NSNumber
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSValue;
     @selector("numberWithBool:") static NSNumber opCall(BOOL);
     @selector("numberWithChar:") static NSNumber opCall(byte);
     @selector("numberWithDouble:") static NSNumber opCall(double);
@@ -143,7 +142,7 @@ class NSString
     static NSUInteger defaultCStringEncoding();
     void release() @selector("release");
 
-    extern(D) override final string toString() @nogc const
+    extern(D) override final string toString() @nogc const @D
     {
         immutable(char)* ret = UTF8String();
         size_t i = 0; while(ret[i++] != '\0'){}
@@ -152,10 +151,9 @@ class NSString
     }
 }
 
-private extern(C) void* _D4objc7runtime7NSArray7__ClassZ = null;
-class NSArray : NSObject
+class NSArray
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     NSArray init() @selector("init");
     ///Creates and returns an empty array.
     @selector("array")
@@ -219,9 +217,9 @@ struct NSArrayD(T)
     }
 }
 
-class NSDictionary : NSObject
+class NSDictionary
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     ///Creates an empty dictionary.
     @selector("dictionary")
     static NSDictionary dictionary();
@@ -250,9 +248,9 @@ class NSDictionary : NSObject
 
 private void* _D4objc7runtime19NSMutableDictionary7__ClassZ = null;
 ///A dynamic collection of objects associated with unique keys.
-class NSMutableDictionary : NSDictionary
+class NSMutableDictionary
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSDictionary;
     @selector("dictionary")
     static NSMutableDictionary dictionary();
 
@@ -330,7 +328,7 @@ class NSError
     @selector("localizedRecoveryOptions")
     NSArray_!NSString _localizedRecoveryOptions();
 
-    extern(D) final NSArrayD!NSString localizedRecoveryOptions()
+    extern(D) final @D NSArrayD!NSString localizedRecoveryOptions()
     {
         return NSArrayD!NSString(_localizedRecoveryOptions);
     }
@@ -344,7 +342,7 @@ class NSError
     NSString localizedFailureReason();
 
 
-    extern(D) final void print()
+    extern(D) @D final void print()
     {
         NSLog("Objective-C Error: %@".ns, this);
     }
@@ -354,7 +352,7 @@ struct NSRange
     NSUInteger length;
     NSUInteger location;
 }
-class NSData : NSObject
+class NSData
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
 }

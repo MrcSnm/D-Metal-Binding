@@ -1,5 +1,4 @@
 module objc.metal_gen;
-version(D_ObjectiveC):
 import objc.meta;
 
 import objc.runtime,

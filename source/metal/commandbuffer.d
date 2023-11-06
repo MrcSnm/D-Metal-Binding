@@ -1,11 +1,10 @@
 module metal.commandbuffer;
-version(D_ObjectiveC):
 import objc.meta : selector, ObjcExtend;
 import metal.metal;
 import metal.rendercommandencoder;
 import metal.blitcommandencoder;
 
-@ObjectiveC:
+@ObjectiveC final:
 
 ///Options for reporting errors from a command buffer.
 enum MTLCommandBufferErrorOption : NSUInteger
@@ -17,8 +16,9 @@ enum MTLCommandBufferErrorOption : NSUInteger
 }
 
 ///A configuration that customizes the behavior for a new command buffer.
-class MTLCommandBufferDescriptor : NSObject
+class MTLCommandBufferDescriptor
 {
+    mixin ObjcExtend!NSObject;
     ///A Boolean value that indicates whether the command buffer the descriptor creates maintains strong references to the resources it uses.
     @selector("retainedResources")
     BOOL retainedResources();
@@ -51,9 +51,9 @@ enum MTLCommandBufferStatus : NSUInteger
 }
 
 ///A configuration you create to customize a blit command encoder, which affects the runtime behavior of the blit pass you encode with it.
-class MTLBlitPassDescriptor : NSObject
+class MTLBlitPassDescriptor
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     ///Creates a new blit pass descriptor with a default configuration.
     @selector("blitPassDescriptor")
     static MTLBlitPassDescriptor blitPassDescriptor();

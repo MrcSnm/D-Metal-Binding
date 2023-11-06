@@ -2,7 +2,6 @@ module metal.metalkit;
 
 import metal.metal;
 import objc.meta : selector;
-version(D_ObjectiveC):
 @ObjectiveC:
 
 class MTKView

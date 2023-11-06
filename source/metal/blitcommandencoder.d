@@ -1,5 +1,4 @@
 module metal.blitcommandencoder;
-version(D_ObjectiveC):
 import objc.meta : selector;
 import metal.metal;
 import metal.texture;

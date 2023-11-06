@@ -2,8 +2,7 @@ module metal.vertexdescriptor;
 import objc.runtime;
 import objc.meta : selector, ObjcExtend;
 
-version(D_ObjectiveC):
-@ObjectiveC:
+@ObjectiveC final:
 
 
 enum MTLVertexFormat : uint
@@ -116,9 +115,9 @@ enum MTLVertexFormat : uint
 
 
 ///An object that determines how to store attribute data in memory and map it to the arguments of a vertex function.
-class MTLVertexAttributeDescriptor : NSObject
+class MTLVertexAttributeDescriptor
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     ///The format of the vertex attribute.
     @selector("format")
     MTLVertexFormat format();
@@ -139,9 +138,9 @@ class MTLVertexAttributeDescriptor : NSObject
     NSUInteger bufferIndex(NSUInteger);
 }
 
-class MTLVertexAttributeDescriptorArray : NSObject
+class MTLVertexAttributeDescriptorArray
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     ///Returns the state of the specified vertex attribute.
     @selector("objectAtIndexedSubscript:")
     MTLVertexAttributeDescriptor objectAtIndexedSubscript(NSUInteger index);
@@ -150,11 +149,11 @@ class MTLVertexAttributeDescriptorArray : NSObject
     @selector("setObject:atIndexedSubscript:")
     void setObjectAtIndexedSubscript(MTLVertexAttributeDescriptor descriptor, NSUInteger index);
 
-    extern(D) final MTLVertexAttributeDescriptor opIndex(NSUInteger index)
+    extern(D) final @D MTLVertexAttributeDescriptor opIndex(NSUInteger index)
     {
         return objectAtIndexedSubscript(index);
     }
-    extern(D) final void opIndexAssign(MTLVertexAttributeDescriptor v, NSUInteger index)
+    extern(D) final @D void opIndexAssign(MTLVertexAttributeDescriptor v, NSUInteger index)
     {
         setObjectAtIndexedSubscript(v, index);
     }
@@ -176,9 +175,9 @@ enum MTLVertexStepFunction : NSUInteger
 }
 
 ///An object that configures how a render pipeline fetches data to send to the vertex function.
-class MTLVertexBufferLayoutDescriptor : NSObject
+class MTLVertexBufferLayoutDescriptor
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     ///The circumstances under which the vertex and its attributes are presented to the vertex function.
     @selector("stepFunction")
     MTLVertexStepFunction stepFunction();
@@ -198,9 +197,9 @@ class MTLVertexBufferLayoutDescriptor : NSObject
     NSUInteger stride(NSUInteger);
 }
 
-class MTLVertexBufferLayoutDescriptorArray : NSObject
+class MTLVertexBufferLayoutDescriptorArray
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     ///Returns the state of the specified vertex buffer layout.
     @selector("objectAtIndexedSubscript:")
     MTLVertexBufferLayoutDescriptor objectAtIndexedSubscript(NSUInteger index);
@@ -209,19 +208,19 @@ class MTLVertexBufferLayoutDescriptorArray : NSObject
     @selector("setObject:atIndexedSubscript:")
     void setObjectAtIndexedSubscript(MTLVertexBufferLayoutDescriptor bufferDesc, NSUInteger index);
 
-    extern(D) final MTLVertexBufferLayoutDescriptor opIndex(NSUInteger index)
+    extern(D) final @D MTLVertexBufferLayoutDescriptor opIndex(NSUInteger index)
     {
         return objectAtIndexedSubscript(index);       
     }
-    extern(D) final void opIndexAssign(MTLVertexBufferLayoutDescriptor value, NSUInteger index)
+    extern(D) final @D void opIndexAssign(MTLVertexBufferLayoutDescriptor value, NSUInteger index)
     {
         setObjectAtIndexedSubscript(value, index);
     }
 }
 
-class MTLVertexDescriptor : NSObject
+class MTLVertexDescriptor
 {
-    mixin ObjcExtend;
+    mixin ObjcExtend!NSObject;
     ///Creates and returns a new vertex descriptor.
     static MTLVertexDescriptor vertexDescriptor() @selector("vertexDescriptor");
     ///Resets the default state for the vertex descriptor.
