@@ -1,5 +1,5 @@
 module objc.runtime;
-public import objc.meta : selector, ObjectiveC, ObjcExtend, D;
+public import objc.meta : selector, ObjectiveC, ObjcExtend;
 
 
 private bool isValidObjectiveCNumber(T)()
@@ -46,7 +46,7 @@ NSNumberD!T ns(T)(T value) if(isValidObjectiveCNumber!T)
 
 
 
-@ObjectiveC final:
+@ObjectiveC final extern(C++):
 
 alias BOOL = bool;
 enum YES = true;
@@ -139,18 +139,18 @@ class NSString
 
     ///A null-terminated UTF8 representation of the string.
     @selector("UTF8String")
-    immutable(char)* UTF8String() @nogc const;
+    const(char)* UTF8String() @nogc const;
 
 
     @selector("defaultCStringEncoding")
     static NSUInteger defaultCStringEncoding();
     void release() @selector("release");
 
-    extern(D) override final string toString() @nogc const @D
+    extern(D) final string toString() @nogc const
     {
-        immutable(char)* ret = UTF8String();
+        const(char)* ret = UTF8String();
         size_t i = 0; while(ret[i++] != '\0'){}
-        if(i > 0) return ret[0..i-1];
+        if(i > 0) return cast(string)ret[0..i-1];
         return null;
     }
 }
@@ -191,7 +191,7 @@ class NSArray
 
 alias NSArray_(T) = NSArray;
 
-struct NSArrayD(T)
+extern(D) struct NSArrayD(T)
 {
     NSArray arr = void;
     alias arr this;
@@ -270,7 +270,7 @@ class NSMutableDictionary
     void setValue(NSObject, NSString);
 }
 
-struct NSMutableDictionaryD(Key, Value)
+extern(D) struct NSMutableDictionaryD(Key, Value)
 {
     static if(isValidObjectiveCNumber!Value)
         alias RealValue = NSNumber;
@@ -331,7 +331,7 @@ class NSError
     @selector("localizedRecoveryOptions")
     NSArray_!NSString _localizedRecoveryOptions();
 
-    extern(D) final @D NSArrayD!NSString localizedRecoveryOptions()
+    extern(D) final NSArrayD!NSString localizedRecoveryOptions()
     {
         return NSArrayD!NSString(_localizedRecoveryOptions);
     }
@@ -345,7 +345,7 @@ class NSError
     NSString localizedFailureReason();
 
 
-    extern(D) @D final void print()
+    extern(D) final void print()
     {
         NSLog("Objective-C Error: %@".ns, this);
     }

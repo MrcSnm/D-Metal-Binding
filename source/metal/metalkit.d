@@ -2,7 +2,7 @@ module metal.metalkit;
 
 import metal.metal;
 import objc.meta : selector;
-@ObjectiveC final:
+@ObjectiveC final extern(C++):
 
 class MTKView
 {

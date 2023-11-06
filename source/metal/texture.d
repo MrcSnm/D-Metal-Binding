@@ -1,6 +1,6 @@
 module metal.texture;
 import objc.meta: selector, ObjcExtend;
-@ObjectiveC final:
+@ObjectiveC final extern(C++):
 
 import metal.metal;
 import metal.pixelformat;

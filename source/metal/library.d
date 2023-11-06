@@ -3,7 +3,7 @@ public import objc.runtime;
 import objc.meta : selector, ObjcExtend;
 import metal.metal;
 
-@ObjectiveC final:
+@ObjectiveC final extern(C++):
 enum MTLLanguageVersion : NSUInteger
 {
     ///Deprecated
@@ -108,7 +108,7 @@ interface MTLLibrary
     NSArray_!NSString _functionNames();
     ///The names of all public functions in the library.
 
-    extern(D) final @D NSArrayD!NSString functionNames()
+    extern(D) final NSArrayD!NSString functionNames()
     {
         return NSArrayD!(NSString)(_functionNames);
     }

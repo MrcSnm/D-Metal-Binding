@@ -4,7 +4,7 @@ import metal.metal;
 import metal.rendercommandencoder;
 import metal.blitcommandencoder;
 
-@ObjectiveC final:
+@ObjectiveC final extern(C++):
 
 ///Options for reporting errors from a command buffer.
 enum MTLCommandBufferErrorOption : NSUInteger

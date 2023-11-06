@@ -1,7 +1,7 @@
 module metal.metal;
 
 import objc.meta : selector, ObjcExtend;
-@ObjectiveC final:
+@ObjectiveC final extern(C++):
 
 public import objc.runtime;
 import metal.library;
@@ -19,12 +19,12 @@ enum MTLCPUCacheMode : NSUInteger
     WriteCombined = 1
 }
 
-immutable NSUInteger MTLResourceCPUCacheModeShift = 0;
-immutable NSUInteger MTLResourceCPUCacheModeMask = 0xf << MTLResourceCPUCacheModeShift;
-immutable NSUInteger MTLResourceStorageModeShift = 4;
-immutable NSUInteger MTLResourceStorageModeMask = 0xf << MTLResourceStorageModeShift;
-immutable NSUInteger MTLResourceHazardTrackingModeShift = 8;
-immutable NSUInteger MTLResourceHazardTrackingModeMask = 0x3 << MTLResourceHazardTrackingModeShift;
+immutable __gshared NSUInteger MTLResourceCPUCacheModeShift = 0;
+immutable __gshared NSUInteger MTLResourceCPUCacheModeMask = 0xf << MTLResourceCPUCacheModeShift;
+immutable __gshared NSUInteger MTLResourceStorageModeShift = 4;
+immutable __gshared NSUInteger MTLResourceStorageModeMask = 0xf << MTLResourceStorageModeShift;
+immutable __gshared NSUInteger MTLResourceHazardTrackingModeShift = 8;
+immutable __gshared NSUInteger MTLResourceHazardTrackingModeMask = 0x3 << MTLResourceHazardTrackingModeShift;
 
 enum MTLStorageMode : NSUInteger
 {
@@ -263,12 +263,12 @@ class MTLRenderPassColorAttachmentDescriptorArray
     @selector("objectIndexedAtSubscript:")
     MTLRenderPassColorAttachmentDescriptor objectIndexedAtSubscript(NSUInteger attachmentIndex);
 
-    final extern(D) @D MTLRenderPassColorAttachmentDescriptor opIndex(NSUInteger index)
+    final extern(D) MTLRenderPassColorAttachmentDescriptor opIndex(NSUInteger index)
     {
         return objectIndexedAtSubscript(index);
     }
 
-    final extern(D) @D void opIndexAssign(MTLRenderPassColorAttachmentDescriptor attachment, NSUInteger index)
+    final extern(D) void opIndexAssign(MTLRenderPassColorAttachmentDescriptor attachment, NSUInteger index)
     {
         setObjectAtIndexedSubscript(attachment, index);
     }
@@ -765,11 +765,11 @@ class MTLRenderPipelineColorAttachmentDescriptorArray
     @selector("objectAtIndexedSubscript:")
     MTLRenderPipelineColorAttachmentDescriptor objectAtIndexedSubscript(NSUInteger attachmentIndex);
 
-    extern(D) final @D MTLRenderPipelineColorAttachmentDescriptor opIndex(NSUInteger index)
+    extern(D) final MTLRenderPipelineColorAttachmentDescriptor opIndex(NSUInteger index)
     {
         return objectAtIndexedSubscript(index);
     }
-    extern(D) final @D void opIndexAssign(NSUInteger index, MTLRenderPipelineColorAttachmentDescriptor v)
+    extern(D) final void opIndexAssign(NSUInteger index, MTLRenderPipelineColorAttachmentDescriptor v)
     {
         setObjectAtIndexedSubscript(v, index);
     }

@@ -2,7 +2,7 @@ module metal.vertexdescriptor;
 import objc.runtime;
 import objc.meta : selector, ObjcExtend;
 
-@ObjectiveC final:
+@ObjectiveC final extern(C++):
 
 
 enum MTLVertexFormat : uint
@@ -149,11 +149,11 @@ class MTLVertexAttributeDescriptorArray
     @selector("setObject:atIndexedSubscript:")
     void setObjectAtIndexedSubscript(MTLVertexAttributeDescriptor descriptor, NSUInteger index);
 
-    extern(D) final @D MTLVertexAttributeDescriptor opIndex(NSUInteger index)
+    extern(D) final MTLVertexAttributeDescriptor opIndex(NSUInteger index)
     {
         return objectAtIndexedSubscript(index);
     }
-    extern(D) final @D void opIndexAssign(MTLVertexAttributeDescriptor v, NSUInteger index)
+    extern(D) final void opIndexAssign(MTLVertexAttributeDescriptor v, NSUInteger index)
     {
         setObjectAtIndexedSubscript(v, index);
     }
@@ -208,11 +208,11 @@ class MTLVertexBufferLayoutDescriptorArray
     @selector("setObject:atIndexedSubscript:")
     void setObjectAtIndexedSubscript(MTLVertexBufferLayoutDescriptor bufferDesc, NSUInteger index);
 
-    extern(D) final @D MTLVertexBufferLayoutDescriptor opIndex(NSUInteger index)
+    extern(D) final MTLVertexBufferLayoutDescriptor opIndex(NSUInteger index)
     {
         return objectAtIndexedSubscript(index);       
     }
-    extern(D) final @D void opIndexAssign(MTLVertexBufferLayoutDescriptor value, NSUInteger index)
+    extern(D) final void opIndexAssign(MTLVertexBufferLayoutDescriptor value, NSUInteger index)
     {
         setObjectAtIndexedSubscript(value, index);
     }

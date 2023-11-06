@@ -103,16 +103,16 @@ mixin template ObjcLink(Class)
         static if(!isAlias!(Class, mem))
         static foreach(ov; __traits(getOverloads, Class, mem))
         {
-            static if(__traits(getLinkage, ov) == "D" && !hasUDA!(ov, D))
+            static if(__traits(getLinkage, ov) == "C++")
             {
                 static if(hasUDA!(ov, Super))
                 {
                     mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
                     "{",
                     "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
-                    "static SEL s;",
+                    "__gshared SEL s;",
                     "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                    "static void* superClass;",
+                    "__gshared void* superClass;",
                     "if(superClass == null) superClass = class_getSuperclass(",Class.stringof,"_);",
                     "objc_super superData = objc_super(self, superClass);",
                     _ObjcGetMsgSuperSend!(ov, "&superData", true),
@@ -123,7 +123,7 @@ mixin template ObjcLink(Class)
                     mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
                     "{",
                     "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
-                    "static SEL s;",
+                    "__gshared SEL s;",
                     "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
                     _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
                     "}");
@@ -133,7 +133,7 @@ mixin template ObjcLink(Class)
                     mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
                     "{",
                     "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
-                    "static SEL s;",
+                    "__gshared SEL s;",
                     "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
                     _ObjcGetMsgSend!(ov, "self", true),
                     "}");
