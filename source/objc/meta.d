@@ -78,6 +78,8 @@ mixin template ObjcExtend(Classes...)
 {
     import std.traits:ReturnType, Parameters;
     import objc.meta:isAlias, Super;
+    
+    
     static foreach(Class; Classes) static foreach(mem; __traits(derivedMembers, Class))
     {
         static if(!isAlias!(Class, mem) && !__traits(hasMember, typeof(this), mem))
@@ -86,8 +88,8 @@ mixin template ObjcExtend(Classes...)
             {
                 static if(!__traits(isStaticFunction, ov))
                 {
-                    @selector(__traits(getAttributes, ov)[0].sel) @Super
-                    final mixin("ReturnType!ov ",mem,"(Parameters!ov);");
+                    final @selector(__traits(getAttributes, ov)[0].sel) @Super
+                    mixin("@", Class.stringof, " ReturnType!ov ",mem,"(Parameters!ov);");
                 }
             }
         }
@@ -127,9 +129,7 @@ mixin template ObjcLink(Class)
                     mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
                     "{",
                     "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
-                    "__gshared void* superClass;",
-                    "if(superClass == null) superClass = class_getSuperclass(",Class.stringof,"_);",
-                    "objc_super superData = objc_super(self, superClass);",
+                    "objc_super superData = objc_super(self, ", __traits(getAttributes, ov)[2].stringof, "_);",
                     _ObjcGetMsgSuperSend!(ov, "&superData", true),
                     "}");
                 }
