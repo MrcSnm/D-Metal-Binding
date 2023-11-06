@@ -21,3 +21,6 @@ mixin ObjcLinkModule!(metal.metalkit);
 mixin ObjcLinkModule!(metal.rendercommandencoder);
 mixin ObjcLinkModule!(metal.texture);
 mixin ObjcLinkModule!(metal.vertexdescriptor);
+
+
+mixin ObjcInitSelectors!(__traits(parent, {}));

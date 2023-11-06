@@ -28,7 +28,6 @@ extern(C)
 // }
 
 struct ObjectiveC;
-struct D;
 struct selector{string sel;}
 alias SEL = void*;
 struct Super;
@@ -58,7 +57,8 @@ string _ObjcGetMsgSend(alias Fn, string arg, bool sliceFirst)()
         enum send = "objc_msgSend_fpret";
     else
         enum send = "objc_msgSend";
-    return "return (cast(fn)&"~send~")("~arg~", s, __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
+    enum ident = selToIdent(__traits(getAttributes, Fn)[0].sel);
+    return "return (cast(fn)&"~send~")("~arg~", "~ident~", __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
 }
 
 string _ObjcGetMsgSuperSend(alias Fn, string arg, bool sliceFirst)()
@@ -68,7 +68,9 @@ string _ObjcGetMsgSuperSend(alias Fn, string arg, bool sliceFirst)()
         enum send = "objc_msgSendSuper_stret";
     else
         enum send = "objc_msgSendSuper";
-    return "return (cast(fn)&"~send~")("~arg~", s, __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
+
+    enum ident = selToIdent(__traits(getAttributes, Fn)[0].sel);
+    return "return (cast(fn)&"~send~")("~arg~", "~ident~", __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
 }
 
 
@@ -92,6 +94,17 @@ mixin template ObjcExtend(Classes...)
     }
 }
 
+string selToIdent(string sel)
+{
+    char[] ret = new char[sel.length+4];
+    ret[0..4] = "_sel";
+    foreach(i; 0..sel.length)
+    {
+        ret[i+4] = (sel[i] == ':' ? '_' : sel[i]);
+    }
+    return cast(string)ret;
+}
+
 mixin template ObjcLink(Class)
 {
     import std.traits;
@@ -99,19 +112,21 @@ mixin template ObjcLink(Class)
     mixin("private void* ",Class.stringof,"_;");
     static foreach(mem; __traits(derivedMembers, Class))
     {
-        
         static if(!isAlias!(Class, mem))
         static foreach(ov; __traits(getOverloads, Class, mem))
         {
             static if(__traits(getLinkage, ov) == "C++")
             {
+                static if(!is(typeof(mixin(selToIdent(__traits(getAttributes, ov)[0].sel)))))
+                {
+                    @selector(__traits(getAttributes, ov)[0].sel)
+                    mixin("__gshared SEL ",selToIdent(__traits(getAttributes, ov)[0].sel),";");
+                }
                 static if(hasUDA!(ov, Super))
                 {
                     mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
                     "{",
                     "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
-                    "__gshared SEL s;",
-                    "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
                     "__gshared void* superClass;",
                     "if(superClass == null) superClass = class_getSuperclass(",Class.stringof,"_);",
                     "objc_super superData = objc_super(self, superClass);",
@@ -123,8 +138,6 @@ mixin template ObjcLink(Class)
                     mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
                     "{",
                     "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
-                    "__gshared SEL s;",
-                    "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
                     _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
                     "}");
                 }
@@ -133,8 +146,6 @@ mixin template ObjcLink(Class)
                     mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
                     "{",
                     "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
-                    "__gshared SEL s;",
-                    "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
                     _ObjcGetMsgSend!(ov, "self", true),
                     "}");
                 }
@@ -170,6 +181,21 @@ mixin template ObjcLinkModule(alias _module)
                     else static if(is(modMem == interface) && hasUDA!(modMem, ObjectiveC))
                         mixin(mem,"_ = objc_getProtocol(mem);");
                 }
+            }
+        }}
+    }
+}
+
+mixin template ObjcInitSelectors(alias _module)
+{
+    import std.traits;
+    static this()
+    {
+        static foreach(mem; __traits(allMembers, _module))
+        {{
+            static if(mem.length > 4 && mem[0..4] == "_sel")
+            {
+                __traits(getMember, _module, mem) = sel_registerName(__traits(getAttributes, __traits(getMember, _module, mem))[0].sel);
             }
         }}
     }
