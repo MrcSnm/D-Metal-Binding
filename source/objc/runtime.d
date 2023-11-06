@@ -20,6 +20,11 @@ private bool isValidObjectiveCNumber(T)()
     - identity (used on any object that extends NSObject will return itself)
 */
 
+To nscast(To, From)(From arg)
+{
+    return (cast(To)cast(void*)arg);
+}
+
 NSString ns(string str)
 {
     import core.memory;
@@ -83,7 +88,6 @@ class NSValue
     mixin ObjcExtend!NSObject;
 }
 
-private void* _D4objc7runtime8NSNumber7__ClassZ = null;
 ///An object wrapper for primitive scalar numeric values.
 class NSNumber
 {
@@ -246,7 +250,6 @@ class NSDictionary
 }
 
 
-private void* _D4objc7runtime19NSMutableDictionary7__ClassZ = null;
 ///A dynamic collection of objects associated with unique keys.
 class NSMutableDictionary
 {
@@ -291,9 +294,9 @@ struct NSMutableDictionaryD(Key, Value)
     void opIndexAssign(Value v, Key k)
     {
         static if(is(Key == string) || is(Key == NSString))
-            dictionary.setValue(cast(NSObject)v.ns, k.ns);
+            dictionary.setValue(cast(NSObject)cast(void*)v.ns, k.ns);
         else
-            dictionary.setObject(cast(NSObject)v.ns, k.ns);
+            dictionary.setObject(cast(NSObject)cast(void*)v.ns, k.ns);
     }
 
     RealValue opIndex(Key k)

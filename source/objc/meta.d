@@ -10,13 +10,32 @@ extern(C)
     void objc_msgSendSuper_stret(void* instance, const char* msg, ...);
     void* objc_getClass(const char* name);
     void* objc_getProtocol(const char* name);
+    void* class_getSuperclass(void* Class);
     SEL sel_registerName(const char* name);
 }
+private void* superclass(void* self)
+{
+    static SEL s;
+    if(s == null) s = sel_registerName("superclass");
+    alias fn = extern(C) void* function(void*, SEL);
+    return (cast(fn)&objc_msgSend)(self, s);
+}
+
+objc_super _objcGetSuper(void* self)
+{
+    return objc_super(self, superclass(self));
+}
+
 struct ObjectiveC;
 struct D;
 struct selector{string sel;}
 alias SEL = void*;
 struct Super;
+struct objc_super
+{
+    void* self;
+    void* superClass;
+}
 
 bool isAlias(T, string member)()
 {
@@ -89,10 +108,13 @@ mixin template ObjcLink(Class)
                 {
                     mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
                     "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
                     "static SEL s;",
                     "if(s == null) s = sel_registerName(__traits(getAttributes, ov)[0].sel);",
-                    _ObjcGetMsgSuperSend!(ov, "self", true),
+                    "static void* superClass;",
+                    "if(superClass == null) superClass = class_getSuperclass(",Class.stringof,"_);",
+                    "objc_super superData = _objcGetSuper(self);",
+                    _ObjcGetMsgSuperSend!(ov, "&superData", true),
                     "}");
                 }
                 else static if(__traits(isStaticFunction, ov))
