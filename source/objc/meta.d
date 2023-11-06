@@ -99,7 +99,7 @@ mixin template ObjcExtend(Classes...)
 string selToIdent(string sel)
 {
     char[] ret = new char[sel.length+4];
-    ret[0..4] = "_sel";
+    ret[0..4] = "_SeL";
     foreach(i; 0..sel.length)
     {
         ret[i+4] = (sel[i] == ':' ? '_' : sel[i]);
@@ -193,7 +193,7 @@ mixin template ObjcInitSelectors(alias _module)
     {
         static foreach(mem; __traits(allMembers, _module))
         {{
-            static if(mem.length > 4 && mem[0..4] == "_sel")
+            static if(mem.length > 4 && mem[0..4] == "_SEL")
             {
                 __traits(getMember, _module, mem) = sel_registerName(__traits(getAttributes, __traits(getMember, _module, mem))[0].sel);
             }
