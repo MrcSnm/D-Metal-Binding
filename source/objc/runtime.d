@@ -291,9 +291,9 @@ struct NSMutableDictionaryD(Key, Value)
     void opIndexAssign(Value v, Key k)
     {
         static if(is(Key == string) || is(Key == NSString))
-            dictionary.setValue(v.ns, k.ns);
+            dictionary.setValue(cast(NSObject)v.ns, k.ns);
         else
-            dictionary.setObject(v.ns, k.ns);
+            dictionary.setObject(cast(NSObject)v.ns, k.ns);
     }
 
     RealValue opIndex(Key k)

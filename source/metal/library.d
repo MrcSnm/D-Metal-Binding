@@ -3,7 +3,7 @@ public import objc.runtime;
 import objc.meta : selector, ObjcExtend;
 import metal.metal;
 
-@ObjectiveC:
+@ObjectiveC final:
 enum MTLLanguageVersion : NSUInteger
 {
     ///Deprecated

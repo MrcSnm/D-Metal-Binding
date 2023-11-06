@@ -1,7 +1,7 @@
 module metal.rendercommandencoder;
 import objc.meta: selector, ObjcExtend;
 
-@ObjectiveC:
+@ObjectiveC final:
 import metal.metal;
 import metal.texture;
 

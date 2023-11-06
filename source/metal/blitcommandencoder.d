@@ -3,7 +3,7 @@ import objc.meta : selector;
 import metal.metal;
 import metal.texture;
 
-@ObjectiveC:
+@ObjectiveC final:
 
 ///The options that enable behavior for some blit operations.
 enum MTLBlitOption : NSUInteger
