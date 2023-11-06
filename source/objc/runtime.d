@@ -20,11 +20,6 @@ private bool isValidObjectiveCNumber(T)()
     - identity (used on any object that extends NSObject will return itself)
 */
 
-To nscast(To, From)(From arg)
-{
-    return (cast(To)cast(void*)arg);
-}
-
 NSString ns(string str)
 {
     import core.memory;
@@ -42,6 +37,11 @@ NSNumberD!T ns(T)(T value) if(isValidObjectiveCNumber!T)
     return NSNumberD!T(value);
 }
 
+///Unused since the change to extern(C++)
+To nscast(To, From)(From arg)
+{
+    return (cast(To)cast(void*)arg);
+}
 ////End ns Helper Section////
 
 
