@@ -148,7 +148,7 @@ mixin template ObjcLink(Class)
                     pragma(mangle, ov.mangleof)
                     mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
                     "{",
-                    "alias fn = ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
+                    "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
                     "objc_super superData = objc_super(self, ", __traits(getAttributes, ov)[2].stringof, "_);",
                     _ObjcGetMsgSuperSend!(ov, "&superData", true),
                     "}");
@@ -158,7 +158,7 @@ mixin template ObjcLink(Class)
                     pragma(mangle, ov.mangleof)
                     mixin("auto ",mixin(_metaGensym!()), " (Parameters!ov)",
                     "{",
-                    "alias fn = ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
                     _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
                     "}");
                 }
@@ -167,7 +167,7 @@ mixin template ObjcLink(Class)
                     pragma(mangle, ov.mangleof)
                     mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
                     "{",
-                    "alias fn = ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
                     _ObjcGetMsgSend!(ov, "self", true),
                     "}");
                 }
