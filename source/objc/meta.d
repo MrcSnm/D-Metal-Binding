@@ -107,6 +107,10 @@ string selToIdent(string sel)
     return cast(string)ret;
 }
 
+enum _metaGensym(string prefix = "_") =
+	'"' ~ prefix ~ `" ~ __traits(identifier, {})["__lambda".length .. $]`;
+
+
 mixin template ObjcLink(Class)
 {
     import std.traits;
@@ -126,26 +130,29 @@ mixin template ObjcLink(Class)
                 }
                 static if(hasUDA!(ov, Super))
                 {
-                    mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
+                    pragma(mangle, ov.mangleof)
+                    mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
                     "{",
-                    "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
+                    "alias fn = ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
                     "objc_super superData = objc_super(self, ", __traits(getAttributes, ov)[2].stringof, "_);",
                     _ObjcGetMsgSuperSend!(ov, "&superData", true),
                     "}");
                 }
                 else static if(__traits(isStaticFunction, ov))
                 {
-                    mixin("extern(C) auto ",ov.mangleof, " (Parameters!ov)",
+                    pragma(mangle, ov.mangleof)
+                    mixin("auto ",mixin(_metaGensym!()), " (Parameters!ov)",
                     "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "alias fn = ReturnType!ov function (void*, SEL, Parameters!ov);",
                     _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
                     "}");
                 }
                 else
                 {
-                    mixin("extern(C) auto ",ov.mangleof, " (void* self, Parameters!ov)",
+                    pragma(mangle, ov.mangleof)
+                    mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
                     "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
+                    "alias fn = ReturnType!ov function (void*, SEL, Parameters!ov);",
                     _ObjcGetMsgSend!(ov, "self", true),
                     "}");
                 }

@@ -19,12 +19,12 @@ enum MTLCPUCacheMode : NSUInteger
     WriteCombined = 1
 }
 
-immutable __gshared NSUInteger MTLResourceCPUCacheModeShift = 0;
-immutable __gshared NSUInteger MTLResourceCPUCacheModeMask = 0xf << MTLResourceCPUCacheModeShift;
-immutable __gshared NSUInteger MTLResourceStorageModeShift = 4;
-immutable __gshared NSUInteger MTLResourceStorageModeMask = 0xf << MTLResourceStorageModeShift;
-immutable __gshared NSUInteger MTLResourceHazardTrackingModeShift = 8;
-immutable __gshared NSUInteger MTLResourceHazardTrackingModeMask = 0x3 << MTLResourceHazardTrackingModeShift;
+const __gshared NSUInteger MTLResourceCPUCacheModeShift = 0;
+const __gshared NSUInteger MTLResourceCPUCacheModeMask = 0xf << MTLResourceCPUCacheModeShift;
+const __gshared NSUInteger MTLResourceStorageModeShift = 4;
+const __gshared NSUInteger MTLResourceStorageModeMask = 0xf << MTLResourceStorageModeShift;
+const __gshared NSUInteger MTLResourceHazardTrackingModeShift = 8;
+const __gshared NSUInteger MTLResourceHazardTrackingModeMask = 0x3 << MTLResourceHazardTrackingModeShift;
 
 enum MTLStorageMode : NSUInteger
 {
