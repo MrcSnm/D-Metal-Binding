@@ -2,12 +2,11 @@ module objc.meta;
 import std.traits;
 extern(C)
 {
-    import core.vararg;
-    void objc_msgSend(void* instance, const char* msg, ...);
-    void objc_msgSend_stret(void* instance, const char* msg, ...);
-    void objc_msgSend_fpret(void* instance, const char* msg, ...);
-    void objc_msgSendSuper(void* instance, const char* msg, ...);
-    void objc_msgSendSuper_stret(void* instance, const char* msg, ...);
+    void objc_msgSend(void* instance, SEL, ...);
+    void objc_msgSend_stret(void* returnObject, void* instance, SEL, ...);
+    void objc_msgSend_fpret(void* instance, SEL, ...);
+    void objc_msgSendSuper(void* instance, SEL, ...);
+    void objc_msgSendSuper_stret(void* returnObject, void* instance, SEL, ...);
     void* objc_getClass(const char* name);
     void* objc_getProtocol(const char* name);
     void* class_getSuperclass(void* Class);
@@ -47,38 +46,48 @@ bool isAliasModule(alias T, string member)()
     return __traits(identifier, __traits(getMember, T, member)) != member;
 }
 
+alias objcFuncT(alias fn) = extern(C) ReturnType!fn function(void* self, SEL, Parameters!fn);
 
 string _ObjcGetMsgSend(alias Fn, string arg, bool sliceFirst)()
 {
     alias RetT = ReturnType!Fn;
+    enum ident = selToIdent(__traits(getAttributes, Fn)[0].sel);
     static if(is(RetT == struct))
+    {
         enum send = "objc_msgSend_stret";
-    else static if(__traits(isFloating, RetT))
+        return "ReturnType!ov structReturn;" ~
+        "alias fn = extern(C) void function(void*, void*, SEL, Parameters!ov);"~
+        "(cast(fn)&objc_msgSend_stret)(&structReturn, " ~arg~", "~ident~", __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");" ~
+        "return structReturn;";
+    }
+    else
+    {
+        static if(__traits(isFloating, RetT))
         enum send = "objc_msgSend_fpret";
     else
         enum send = "objc_msgSend";
-    enum ident = selToIdent(__traits(getAttributes, Fn)[0].sel);
-    return "return (cast(fn)&"~send~")("~arg~", "~ident~", __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
+        return "return (cast(objcFuncT!(ov))&"~send~")("~arg~", "~ident~", __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
+    }
 }
 
-string _ObjcGetMsgSuperSend(alias Fn, string arg, bool sliceFirst)()
-{
-    alias RetT = ReturnType!Fn;
-    static if(is(RetT == struct))
-        enum send = "objc_msgSendSuper_stret";
-    else
-        enum send = "objc_msgSendSuper";
+// string _ObjcGetMsgSuperSend(alias Fn, string arg, bool sliceFirst)()
+// {
+//     alias RetT = ReturnType!Fn;
+//     static if(is(RetT == struct))
+//         enum send = "objc_msgSendSuper_stret";
+//     else
+//         enum send = "objc_msgSendSuper";
 
-    enum ident = selToIdent(__traits(getAttributes, Fn)[0].sel);
-    return "return (cast(fn)&"~send~")("~arg~", "~ident~", __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
-}
+//     enum ident = selToIdent(__traits(getAttributes, Fn)[0].sel);
+//     return "return (cast(fn)&"~send~")("~arg~", "~ident~", __traits(parameters)"~(sliceFirst ? "[1..$]" : "")~");";
+// }
 
 
 template GetClassSuperChain(Class)
 {
     import std.meta:AliasSeq;
     static if(__traits(hasMember, Class, "SuperClass"))
-        alias GetClassSuperChain = AliasSeq!(typeof(__traits(getMember, Class, "SuperClass")), GetClassSuperChain!(typeof(__traits(getMember, Class, "SuperClass"))));
+        alias GetClassSuperChain = AliasSeq!(__traits(getMember, Class, "SuperClass"), GetClassSuperChain!(__traits(getMember, Class, "SuperClass")));
     else
         alias GetClassSuperChain = AliasSeq!();
 }
@@ -88,7 +97,7 @@ mixin template ObjcExtend(Classes...)
 {
     import std.traits:ReturnType, Parameters;
     import objc.meta:isAlias, Super, GetClassSuperChain;
-    __gshared Classes[0] SuperClass;
+    extern(D) static alias SuperClass = Classes[0];
 
 
     static foreach(Class; Classes) static foreach(mem; __traits(derivedMembers, Class))
@@ -130,7 +139,7 @@ mixin template ObjcLink(Class)
 {
     import std.traits;
     import objc.meta;
-    mixin("private void* ",Class.stringof,"_;");
+    mixin(" void* ",Class.stringof,"_;");
     static foreach(mem; __traits(derivedMembers, Class))
     {
         static if(!isAlias!(Class, mem))
@@ -143,22 +152,20 @@ mixin template ObjcLink(Class)
                     @selector(__traits(getAttributes, ov)[0].sel)
                     mixin("__gshared SEL ",selToIdent(__traits(getAttributes, ov)[0].sel),";");
                 }
-                static if(hasUDA!(ov, Super))
-                {
-                    pragma(mangle, ov.mangleof)
-                    mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
-                    "{",
-                    "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
-                    "objc_super superData = objc_super(self, ", __traits(getAttributes, ov)[2].stringof, "_);",
-                    _ObjcGetMsgSuperSend!(ov, "&superData", true),
-                    "}");
-                }
-                else static if(__traits(isStaticFunction, ov))
+                // static if(hasUDA!(ov, Super))
+                // {
+                //     pragma(mangle, ov.mangleof)
+                //     mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
+                //     "{",
+                //     "return (cast(__traits(getAttributes, ov)[2])self).",mem,"(__traits(parameters)[1..$]);",
+                //     "}");
+                // }
+                // else 
+                static if(__traits(isStaticFunction, ov))
                 {
                     pragma(mangle, ov.mangleof)
                     mixin("auto ",mixin(_metaGensym!()), " (Parameters!ov)",
                     "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
                     _ObjcGetMsgSend!(ov, Class.stringof~"_", false),
                     "}");
                 }
@@ -167,7 +174,6 @@ mixin template ObjcLink(Class)
                     pragma(mangle, ov.mangleof)
                     mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
                     "{",
-                    "alias fn = extern(C) ReturnType!ov function (void*, SEL, Parameters!ov);",
                     _ObjcGetMsgSend!(ov, "self", true),
                     "}");
                 }
