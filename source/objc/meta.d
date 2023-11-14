@@ -74,14 +74,29 @@ string _ObjcGetMsgSuperSend(alias Fn, string arg, bool sliceFirst)()
 }
 
 
+template GetClassSuperChain(Class)
+{
+    import std.meta:AliasSeq;
+    static if(__traits(hasMember, Class, "SuperClass"))
+        alias GetClassSuperChain = AliasSeq!(typeof(__traits(getMember, Class, "SuperClass")), GetClassSuperChain!(typeof(__traits(getMember, Class, "SuperClass"))));
+    else
+        alias GetClassSuperChain = AliasSeq!();
+}
+
+
 mixin template ObjcExtend(Classes...)
 {
     import std.traits:ReturnType, Parameters;
-    import objc.meta:isAlias, Super;
-    
-    
+    import objc.meta:isAlias, Super, GetClassSuperChain;
+    __gshared Classes[0] SuperClass;
+
+
     static foreach(Class; Classes) static foreach(mem; __traits(derivedMembers, Class))
     {
+        static foreach(_SuperClass; GetClassSuperChain!Class)
+        {
+            mixin ObjcExtend!(_SuperClass);
+        }
         static if(!isAlias!(Class, mem) && !__traits(hasMember, typeof(this), mem))
         {
             static foreach(ov; __traits(getOverloads, Class, mem))
