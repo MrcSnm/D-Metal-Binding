@@ -200,7 +200,7 @@ mixin template ObjcInitSelectors(alias _module)
     {
         static foreach(mem; __traits(allMembers, _module))
         {{
-            static if(mem.length > 4 && mem[0..4] == "_SEL")
+            static if(mem.length > 4 && mem[0..4] == "_SeL")
             {
                 __traits(getMember, _module, mem) = sel_registerName(__traits(getAttributes, __traits(getMember, _module, mem))[0].sel);
             }
