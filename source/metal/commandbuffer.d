@@ -19,6 +19,12 @@ enum MTLCommandBufferErrorOption : NSUInteger
 class MTLCommandBufferDescriptor
 {
     mixin ObjcExtend!NSObject;
+    @selector("alloc")
+    static MTLCommandBufferDescriptor alloc();
+
+    @selector("init")
+    MTLCommandBufferDescriptor initialize(); 
+
     ///A Boolean value that indicates whether the command buffer the descriptor creates maintains strong references to the resources it uses.
     @selector("retainedResources")
     BOOL retainedResources();

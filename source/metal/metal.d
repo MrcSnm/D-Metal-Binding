@@ -1010,7 +1010,7 @@ interface MTLCommandQueue
 {
     ///Returns a command buffer from the command queue that you configure with a descriptor.
     @selector("commandBufferWithDescriptor:")
-    MTLCommandBuffer commandBuffer(MTLCommandBufferDescriptor* descriptor);
+    MTLCommandBuffer commandBuffer(MTLCommandBufferDescriptor descriptor);
 
     ///Returns a command buffer from the command queue that maintains strong references to resources.
     @selector("commandBuffer")
