@@ -138,7 +138,7 @@ class MTLFunction
 
 struct MTLClearColor
 {
-    float red, green, blue, alpha;
+    double red, green, blue, alpha;
 }
 
 MTLClearColor MTLClearColorMake(double red = 0.0, double green = 0.0, double blue = 0.0, double alpha = 1.0);
@@ -251,7 +251,7 @@ class MTLRenderPassColorAttachmentDescriptor
     @selector("clearColor")
     MTLClearColor clearColor();
     @selector("setClearColor:")
-    MTLClearColor clearColor(MTLClearColor);
+    void clearColor(MTLClearColor);
 }
 
 class MTLRenderPassColorAttachmentDescriptorArray
@@ -260,12 +260,12 @@ class MTLRenderPassColorAttachmentDescriptorArray
     @selector("setObject:atIndexedSubscript:")
     void setObjectAtIndexedSubscript(MTLRenderPassColorAttachmentDescriptor attachment, NSUInteger attachmentIndex);
 
-    @selector("objectIndexedAtSubscript:")
-    MTLRenderPassColorAttachmentDescriptor objectIndexedAtSubscript(NSUInteger attachmentIndex);
+    @selector("objectAtIndexedSubscript:")
+    MTLRenderPassColorAttachmentDescriptor objectAtIndexedSubscript(NSUInteger attachmentIndex);
 
     final extern(D) MTLRenderPassColorAttachmentDescriptor opIndex(NSUInteger index)
     {
-        return objectIndexedAtSubscript(index);
+        return objectAtIndexedSubscript(index);
     }
 
     final extern(D) void opIndexAssign(MTLRenderPassColorAttachmentDescriptor attachment, NSUInteger index)
