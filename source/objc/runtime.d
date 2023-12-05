@@ -359,3 +359,31 @@ class NSData
 {
     mixin ObjcExtend!NSObject;
 }
+
+///An object that represents the location of a resource, such as an item on a remote server or the path to a local file.
+class NSURL
+{
+    mixin ObjcExtend!NSObject;
+
+}
+
+///This defines the structure used as contextual information in the NSFastEnumeration protocol.
+struct NSFastEnumerationState
+{
+    import core.stdc.config;
+    ///A C array that you can use to hold returned values.
+    c_ulong[5] extra;
+    ///A C array of objects.
+    void* itemsPtr;
+    ///Arbitrary state information used to detect whether the collection has been mutated.
+    c_ulong mutationsPtr;
+    ///Arbitrary state information used by the iterator. Typically this is set to 0 at the beginning of the iteration.
+    c_ulong state;
+}
+///A protocol that objects adopt to support fast enumeration.
+interface NSFastEnumeration
+{
+    ///Returns by reference a C array of objects over which the sender should iterate, and as the return value the number of objects in the array.
+    @selector("countByEnumeratingWithState:objects:count:")
+    NSUInteger countByEnumeratingWithState(NSFastEnumerationState* state, void* objects, NSUInteger count);
+}

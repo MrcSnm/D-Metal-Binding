@@ -143,17 +143,18 @@ mixin template ObjcLink(Class)
                     @selector(__traits(getAttributes, ov)[0].sel)
                     mixin("__gshared SEL ",selToIdent(__traits(getAttributes, ov)[0].sel),";");
                 }
-                static if(hasUDA!(ov, Super))
-                {
-                    pragma(mangle, ov.mangleof)
-                    mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
-                    "{",
-                    "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
-                    "objc_super superData = objc_super(self, ", __traits(getAttributes, ov)[2].stringof, "_);",
-                    _ObjcGetMsgSuperSend!(ov, "&superData", true),
-                    "}");
-                }
-                else static if(__traits(isStaticFunction, ov))
+                // static if(hasUDA!(ov, Super))
+                // {
+                //     pragma(mangle, ov.mangleof)
+                //     mixin("auto ",mixin(_metaGensym!()), " (void* self, Parameters!ov)",
+                //     "{",
+                //     "alias fn = extern(C) ReturnType!ov function (objc_super*, SEL, Parameters!ov);",
+                //     "objc_super superData = objc_super(self, ", __traits(getAttributes, ov)[2].stringof, "_);",
+                //     _ObjcGetMsgSuperSend!(ov, "&superData", true),
+                //     "}");
+                // }
+                // else 
+                static if(__traits(isStaticFunction, ov))
                 {
                     pragma(mangle, ov.mangleof)
                     mixin("auto ",mixin(_metaGensym!()), " (Parameters!ov)",
