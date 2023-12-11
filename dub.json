@@ -1,9 +1,10 @@
 {
-	"authors": [
-		"Hipreme"
-	],
+	"authors": ["Hipreme"],
 	"copyright": "Copyright © 2023, Hipreme",
-	"description": "extern(Objective-C) bindings to Apple's metal",
+	"description": "Bindings to Apple's metal graphics API. No compiler support needed",
+	"dependencies": {
+		"objc_meta": "~>1.0.2"
+	},
 	"targetName": "metal",
 	"targetPath": "libs",
 	"targetType": "staticLibrary",
