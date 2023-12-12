@@ -12,7 +12,6 @@ import objc.runtime,
        metal.vertexdescriptor;
 
 
-mixin ObjcLinkModule!(objc.runtime);
 mixin ObjcLinkModule!(metal.blitcommandencoder);
 mixin ObjcLinkModule!(metal.commandbuffer);
 mixin ObjcLinkModule!(metal.library);
