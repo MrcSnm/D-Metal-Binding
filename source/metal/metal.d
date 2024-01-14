@@ -757,7 +757,7 @@ class MTLRenderPipelineColorAttachmentDescriptorArray
 {
     mixin ObjcExtend!NSObject;
     static MTLRenderPipelineColorAttachmentDescriptorArray alloc() @selector("alloc");
-    alias ini = initialize;
+    // alias ini = initialize;
 
     @selector("setObject:atIndexedSubscript:")
     void setObjectAtIndexedSubscript(MTLRenderPipelineColorAttachmentDescriptor attachment, NSUInteger attachmentIndex);
@@ -778,8 +778,6 @@ class MTLRenderPipelineColorAttachmentDescriptorArray
 class MTLRenderPipelineDescriptor
 {
     mixin ObjcExtend!NSObject;
-    static MTLRenderPipelineDescriptor alloc() @selector("alloc");
-    MTLRenderPipelineDescriptor initialize() @selector("init");
     alias ini = initialize;
 
     ///A string that identifies the render pipeline descriptor.
