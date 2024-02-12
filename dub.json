@@ -3,7 +3,7 @@
 	"copyright": "Copyright © 2023, Hipreme",
 	"description": "Bindings to Apple's metal graphics API. No compiler support needed",
 	"dependencies": {
-		"objc_meta": "~>1.0.13"
+		"objc_meta": "~>1.0.14"
 	},
 	"targetName": "metal",
 	"targetPath": "libs",
