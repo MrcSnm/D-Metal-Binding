@@ -1151,6 +1151,8 @@ class CAMetalLayer
 
     @selector("device")
     MTLDevice device();
+    @selector("setDevice:")
+    MTLDevice device(MTLDevice);
 
     @selector("drawableSize")
     CGSize drawableSize();
