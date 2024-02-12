@@ -999,9 +999,8 @@ interface MTLDrawable
     CFTimeInterval presentedTime();
 }
 
-
-MTLSamplePosition MTLSamplePositionMake(float x, float y);
-MTLCommandBuffer MTLCreateSystemDefaultDevice();
+extern(C) MTLSamplePosition MTLSamplePositionMake(float x, float y);
+extern(C) MTLDevice MTLCreateSystemDefaultDevice();
 
 ///An instance you use to create, submit, and schedule command buffers to a specific GPU device to run the commands within those buffers.
 interface MTLCommandQueue
