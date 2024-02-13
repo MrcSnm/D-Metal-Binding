@@ -1001,6 +1001,7 @@ interface MTLDrawable
 
 extern(C) MTLSamplePosition MTLSamplePositionMake(float x, float y);
 extern(C) MTLDevice MTLCreateSystemDefaultDevice();
+extern(C) NSArrayD!MTLDevice MTLCopyAllDevices();
 
 ///An instance you use to create, submit, and schedule command buffers to a specific GPU device to run the commands within those buffers.
 interface MTLCommandQueue
