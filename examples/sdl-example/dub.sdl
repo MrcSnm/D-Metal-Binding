@@ -1,0 +1,19 @@
+name "sdl-example"
+description "SDL2 exmaple application"
+authors "Luna"
+copyright "Copyright © 2024, Luna"
+license "proprietary"
+
+dependency "d-metal-binding" path="../../"
+dependency "bindbc-sdl" version="~>1.4.5"
+dependency "inmath" version="~>1.0.5"
+
+targetPath "out/"
+workingDirectory "out/"
+
+lflags "-framework" "CoreData" "-framework" "CoreGraphics" "-framework" "Foundation" "-all_load"
+libs "objc"
+
+// NOTE: Throw SDL2 in libs/
+copyFiles "libs/*"
+versions "SDL_2_28"

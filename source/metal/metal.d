@@ -1001,6 +1001,7 @@ interface MTLDrawable
 
 extern(C) MTLSamplePosition MTLSamplePositionMake(float x, float y);
 extern(C) MTLDevice MTLCreateSystemDefaultDevice();
+extern(C) NSArrayD!MTLDevice MTLCopyAllDevices();
 
 ///An instance you use to create, submit, and schedule command buffers to a specific GPU device to run the commands within those buffers.
 interface MTLCommandQueue
@@ -1156,7 +1157,7 @@ class CAMetalLayer
 
     @selector("drawableSize")
     CGSize drawableSize();
-    @selector("drawableSize:")
+    @selector("setDrawableSize:")
     CGSize drawableSize(CGSize);
     
     @selector("nextDrawable")
@@ -1197,4 +1198,4 @@ Params:
     height = A height value.
 Returns: Returns a CGSize structure with the specified width and height.
 */
-CGSize CGSizeMake(float width, float height);
+extern(C) CGSize CGSizeMake(float width, float height);

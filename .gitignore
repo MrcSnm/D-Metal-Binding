@@ -17,3 +17,7 @@ d-metal-binding-test-*
 *.o
 *.obj
 *.lst
+
+libSDL2.dylib
+out/
+dub.selections.json
