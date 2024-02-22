@@ -93,8 +93,8 @@ interface MTLRenderCommandEncoder
     void setTriangleFillMode(MTLTriangleFillMode);
 
     ///Sets the winding order of front-facing primitives.
-    @selector("setFrontFaceWinding:")
-    void setFrontFaceWinding(MTLWinding);
+    @selector("setFrontFacingWinding:")
+    void setFrontFacingWinding(MTLWinding);
 
     ///Specifies whether to cull primitives when front- or back-facing.
     @selector("setCullMode:")
