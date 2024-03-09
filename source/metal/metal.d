@@ -156,6 +156,7 @@ enum MTLStoreActionOptions : NSUInteger
 class MTLRenderPassAttachmentDescriptor
 {
     mixin ObjcExtend!NSObject;
+    
     ///The texture object associated with this attachment.
     @selector("texture")
     MTLTexture texture();
@@ -527,6 +528,8 @@ class MTLDepthStencilDescriptor
 ///A group of render targets that hold the results of a render pass.
 class MTLRenderPassDescriptor
 {
+    mixin ObjcExtend!NSObject;
+
     @selector("new")
     static MTLRenderPassDescriptor new_();
     
@@ -694,6 +697,8 @@ enum MTLBlendFactor : NSUInteger
 
 class MTLRenderPipelineColorAttachmentDescriptor
 {
+    mixin ObjcExtend!NSObject;
+
     ///The pixel format of the color attachment’s texture.
     @selector("pixelFormat")
     MTLPixelFormat pixelFormat();
@@ -756,6 +761,7 @@ class MTLRenderPipelineColorAttachmentDescriptor
 class MTLRenderPipelineColorAttachmentDescriptorArray
 {
     mixin ObjcExtend!NSObject;
+
     static MTLRenderPipelineColorAttachmentDescriptorArray alloc() @selector("alloc");
     // alias ini = initialize;
 
@@ -836,6 +842,8 @@ enum MTLRenderStages : NSUInteger
 ///An object that can capture, track, and manage resource dependencies across command encoders.
 interface MTLFence
 {
+    mixin ObjcExtend!NSObject;
+
     ///The device object that created the fence.
     @selector("device")
     MTLDevice device();
@@ -892,6 +900,8 @@ enum MTLArgumentBuffersTier : NSUInteger
 ///The main Metal interface to a GPU that apps use to draw graphics and run computations in parallel.
 interface MTLDevice
 {
+    mixin ObjcExtend!NSObject;
+
     ///The full name of the GPU device.
     @selector("name")
     NSString name();
@@ -973,6 +983,8 @@ alias MTLDrawablePresentedHandler = extern(C) void function(MTLDrawable);
 ///A displayable resource that can be rendered or written to.
 interface MTLDrawable
 {
+    mixin ObjcExtend!NSObject;
+
     ///A positive integer that identifies the drawable.
     @selector("drawableID")
     NSUInteger drawableID();
@@ -1006,6 +1018,8 @@ extern(C) NSArrayD!MTLDevice MTLCopyAllDevices();
 ///An instance you use to create, submit, and schedule command buffers to a specific GPU device to run the commands within those buffers.
 interface MTLCommandQueue
 {
+    mixin ObjcExtend!NSObject;
+
     ///Returns a command buffer from the command queue that you configure with a descriptor.
     @selector("commandBufferWithDescriptor:")
     MTLCommandBuffer commandBuffer(MTLCommandBufferDescriptor descriptor);
@@ -1033,6 +1047,8 @@ interface MTLCommandQueue
 ///A Metal drawable associated with a Core Animation layer.
 interface CAMetalDrawable : MTLDrawable
 {
+    mixin ObjcExtend!NSObject;
+
     ///A Metal texture object that contains the drawable’s contents.
     @selector("texture")
     MTLTexture texture();
@@ -1044,6 +1060,8 @@ interface CAMetalDrawable : MTLDrawable
 ///An allocation of memory that is accessible to a GPU.
 interface MTLResource
 {
+    mixin ObjcExtend!NSObject;
+
     ///The device object that created the resource.
     @selector("device")
     MTLDevice device();
@@ -1058,6 +1076,8 @@ interface MTLResource
 ///An encoder that writes GPU commands into a command buffer.
 interface MTLCommandEncoder
 {
+    mixin ObjcExtend!NSObject;
+
     ///Declares that all command generation from the encoder is completed.
     @selector("endEncoding")
     void endEncoding();
@@ -1089,6 +1109,8 @@ interface MTLCommandEncoder
 
 interface MTLBuffer
 {
+    mixin ObjcExtend!NSObject;
+
     ///Creates a texture that shares its storage with the buffer.
     @selector("newTextureWithDescriptor:offset:bytesPerRow:")
     MTLTexture newTextureWithDescriptor(
@@ -1114,15 +1136,6 @@ interface MTLBuffer
     ///The logical size of the buffer, in bytes.
     @selector("length")
     NSUInteger length();
-
-    @selector("retain")
-    void retain();
-
-    @selector("release")
-    void release();
-
-    @selector("dealloc")
-    void dealloc();
 }
 
 ///An object you use to synchronize access to Metal resources.
@@ -1159,6 +1172,31 @@ class CAMetalLayer
     CGSize drawableSize();
     @selector("setDrawableSize:")
     CGSize drawableSize(CGSize);
+
+    @selector("framebufferOnly")
+    BOOL framebufferOnly();
+    @selector("setFramebufferOnly:")
+    BOOL framebufferOnly(BOOL);
+
+    @selector("wantsExtendedDynamicRangeContent")
+    BOOL wantsExtendedDynamicRangeContent();
+    @selector("setWantsExtendedDynamicRangeContent:")
+    BOOL wantsExtendedDynamicRangeContent(BOOL);
+
+    @selector("presentsWithTransaction")
+    BOOL presentsWithTransaction();
+    @selector("setPresentsWithTransaction:")
+    BOOL presentsWithTransaction(BOOL);
+
+    @selector("displaySyncEnabled")
+    BOOL displaySyncEnabled();
+    @selector("setDisplaySyncEnabled:")
+    BOOL displaySyncEnabled(BOOL);
+
+    @selector("allowsNextDrawableTimeout")
+    BOOL allowsNextDrawableTimeout();
+    @selector("setAllowsNextDrawableTimeout:")
+    BOOL allowsNextDrawableTimeout(BOOL);
     
     @selector("nextDrawable")
     CAMetalDrawable nextDrawable();
