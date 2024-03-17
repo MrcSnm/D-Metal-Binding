@@ -3,9 +3,12 @@ module metal.metalkit;
 import metal.metal;
 import objc.meta : selector;
 @ObjectiveC final extern(C++):
+@nogc nothrow:
 
 class MTKView
 {
+@nogc nothrow:
+
     ///Creates a render pass descriptor to draw into the current drawable.
     @selector("currentRenderPassDescriptor")
     MTLRenderPassDescriptor currentRenderPassDescriptor();

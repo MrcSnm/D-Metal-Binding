@@ -4,6 +4,7 @@ import metal.metal;
 import metal.texture;
 
 @ObjectiveC final extern(C++):
+@nogc nothrow:
 
 ///The options that enable behavior for some blit operations.
 enum MTLBlitOption : NSUInteger
@@ -21,6 +22,8 @@ enum MTLBlitOption : NSUInteger
 ///An interface you can use to encode GPU commands that copy and modify the underlying memory of various Metal resources.
 interface MTLBlitCommandEncoder : MTLCommandEncoder
 {
+@nogc nothrow:
+
     ///Encodes a command that fills a buffer with a constant value for each byte.
     @selector("fillBuffer:range:value:")
     void fillBuffer(MTLBuffer buffer, NSRange range, ubyte value);

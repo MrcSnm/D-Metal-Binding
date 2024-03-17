@@ -3,6 +3,7 @@ import objc.runtime;
 import objc.meta : selector, ObjcExtend;
 
 @ObjectiveC final extern(C++):
+@nogc nothrow:
 
 
 enum MTLVertexFormat : uint
@@ -117,6 +118,8 @@ enum MTLVertexFormat : uint
 ///An object that determines how to store attribute data in memory and map it to the arguments of a vertex function.
 class MTLVertexAttributeDescriptor
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     ///The format of the vertex attribute.
     @selector("format")
@@ -140,6 +143,8 @@ class MTLVertexAttributeDescriptor
 
 class MTLVertexAttributeDescriptorArray
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     ///Returns the state of the specified vertex attribute.
     @selector("objectAtIndexedSubscript:")
@@ -177,6 +182,8 @@ enum MTLVertexStepFunction : NSUInteger
 ///An object that configures how a render pipeline fetches data to send to the vertex function.
 class MTLVertexBufferLayoutDescriptor
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     ///The circumstances under which the vertex and its attributes are presented to the vertex function.
     @selector("stepFunction")
@@ -199,6 +206,8 @@ class MTLVertexBufferLayoutDescriptor
 
 class MTLVertexBufferLayoutDescriptorArray
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     ///Returns the state of the specified vertex buffer layout.
     @selector("objectAtIndexedSubscript:")
@@ -220,6 +229,8 @@ class MTLVertexBufferLayoutDescriptorArray
 
 class MTLVertexDescriptor
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     ///Creates and returns a new vertex descriptor.
     static MTLVertexDescriptor vertexDescriptor() @selector("vertexDescriptor");
