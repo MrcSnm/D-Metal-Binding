@@ -4,6 +4,7 @@ import objc.meta : selector, ObjcExtend;
 import metal.metal;
 
 @ObjectiveC final extern(C++):
+@nogc nothrow:
 enum MTLLanguageVersion : NSUInteger
 {
     ///Deprecated
@@ -37,6 +38,8 @@ enum MTLLibraryType : NSInteger
 
 class MTLCompileOptions
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     @selector("alloc")
     static MTLCompileOptions alloc();
@@ -97,6 +100,8 @@ class MTLCompileOptions
 
 interface MTLLibrary
 {
+@nogc nothrow:
+
     ///The installation name for a dynamic library.
     @selector("installName")
     NSString installName();

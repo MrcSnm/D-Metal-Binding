@@ -1,5 +1,6 @@
 module metal.pixelformat;
 import objc.runtime;
+@nogc nothrow:
 
 enum MTLPixelFormat : NSUInteger
 {

@@ -5,6 +5,7 @@ import metal.rendercommandencoder;
 import metal.blitcommandencoder;
 
 @ObjectiveC final extern(C++):
+@nogc nothrow:
 
 ///Options for reporting errors from a command buffer.
 enum MTLCommandBufferErrorOption : NSUInteger
@@ -18,6 +19,8 @@ enum MTLCommandBufferErrorOption : NSUInteger
 ///A configuration that customizes the behavior for a new command buffer.
 class MTLCommandBufferDescriptor
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     @selector("alloc")
     static MTLCommandBufferDescriptor alloc();
@@ -87,6 +90,8 @@ enum MTLCommandBufferError : NSUInteger
 ///A configuration you create to customize a blit command encoder, which affects the runtime behavior of the blit pass you encode with it.
 class MTLBlitPassDescriptor
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSObject;
     ///Creates a new blit pass descriptor with a default configuration.
     @selector("blitPassDescriptor")
@@ -120,6 +125,8 @@ enum MTLCommandEncoderErrorState : NSInteger
 ///A container that provides additional information about a runtime failure a GPU encounters as it runs the commands in a command buffer.
 interface MTLCommandBufferEncoderInfo
 {
+@nogc nothrow:
+
     ///The name of the encoder that generates the error information
     @selector("label")
     NSString label();
@@ -147,6 +154,8 @@ enum MTLFunctionLogType : NSUInteger
 ///The source code that logged a debug message.
 interface MTLFunctionLogDebugLocation
 {
+@nogc nothrow:
+
     ///The name of the shader function.
     @selector("functionName")
     NSString functionName();
@@ -188,12 +197,16 @@ interface MTLFunctionLog
 ///A collection of logged messages, created when a Metal device runs a command buffer.
 interface MTLLogContainer
 {
+@nogc nothrow:
+
     mixin ObjcExtend!NSFastEnumeration;
 }
 
 ///A container that stores a sequence of GPU commands that you encode into it.
 interface MTLCommandBuffer
 {
+@nogc nothrow:
+
     ///Encodes a command into the command buffer that pauses the GPU from running subsequent passes until the event equals or exceeds a value.
     @selector("encodeWaitForEvent:value:")
     void encodeWaitForEvent(MTLEvent event, ulong value);

@@ -2,6 +2,7 @@ module metal.rendercommandencoder;
 import objc.meta: selector, ObjcExtend;
 
 @ObjectiveC final extern(C++):
+@nogc nothrow:
 import metal.metal;
 import metal.texture;
 
@@ -25,6 +26,8 @@ enum MTLFunctionType : NSUInteger
 ///An object representing a function that you can add to a visible function table.
 interface MTLFunctionHandle
 {
+@nogc nothrow:
+
     ///The device object that created the shader function.
     @selector("device")
     MTLDevice device();
@@ -41,6 +44,8 @@ interface MTLFunctionHandle
 ///A collection of model data for GPU-accelerated intersection of rays with the model.
 interface MTLAccelerationStructure
 {
+@nogc nothrow:
+
     ///The size of the acceleration structure’s memory allocation, in bytes.
     @selector("size")
     NSUInteger size();
@@ -51,6 +56,8 @@ interface MTLAccelerationStructure
 ///A table of intersection functions that Metal calls to perform ray-tracing intersection tests.
 interface MTLIntersectionFunctionTable
 {
+@nogc nothrow:
+
     ///Sets an entry in the table.
     @selector("setFunction:atIndex:")
     void setFunction(MTLFunctionHandle, NSUInteger index);
@@ -59,6 +66,8 @@ interface MTLIntersectionFunctionTable
 ///A table of shader functions visible to your app that you can pass into compute commands to customize the behavior of a shader.
 interface MTLVisibleFunctionTable
 {
+@nogc nothrow:
+
     ///Sets a table entry to point to a callable function.
     @selector("setFunction:atIndex:")
     void setFunction(MTLFunctionHandle, NSUInteger index);
@@ -72,6 +81,8 @@ interface MTLVisibleFunctionTable
 
 struct MTLVertexAmplificationViewMapping
 {
+@nogc nothrow:
+
     ///An offset into the list of render targets.
     uint renderTargetArrayIndexOffset;
     ///An offset into the list of viewports.
@@ -80,7 +91,10 @@ struct MTLVertexAmplificationViewMapping
 
 interface MTLRenderCommandEncoder
 {
+@nogc nothrow:
+
     mixin ObjcExtend!MTLCommandEncoder;
+
     @selector("setViewport:")
     void setViewport(MTLViewport);
 

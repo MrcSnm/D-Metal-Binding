@@ -1,6 +1,7 @@
 module metal.texture;
 import objc.meta: selector, ObjcExtend;
 @ObjectiveC final extern(C++):
+@nogc nothrow:
 
 import metal.metal;
 import metal.pixelformat;
@@ -79,9 +80,12 @@ enum MTLCompareFunction : NSUInteger
 ///An object that you use to configure a texture sampler.
 class MTLSamplerDescriptor
 {
+@nogc nothrow:
     mixin ObjcExtend!NSObject;
+
     @selector("alloc")
     static MTLSamplerDescriptor alloc();
+
     @selector("init")
     MTLSamplerDescriptor initialize();
 
@@ -181,6 +185,7 @@ class MTLSamplerDescriptor
 ///An object that defines how a texture should be sampled.
 interface MTLSamplerState
 {
+@nogc nothrow:
     ///The device object that created the sampler.
     @selector("device")
     MTLDevice device();
@@ -271,6 +276,7 @@ enum MTLTextureCompressionType : NSInteger
 ///An object that you use to configure new Metal texture objects.
 class MTLTextureDescriptor
 {
+@nogc nothrow:
     mixin ObjcExtend!NSObject;
     @selector("alloc")
     static MTLTextureDescriptor alloc();
@@ -398,6 +404,10 @@ class MTLTextureDescriptor
 ///A resource that holds formatted image data.
 interface MTLTexture
 {
+@nogc nothrow:
+
+    mixin ObjcExtend!NSObject;
+
     ///Copies pixel data into a section of a texture slice.
     @selector("replaceRegion:mipmapLevel:slice:withBytes:bytesPerRow:bytesPerImage:")
     void replaceRegion(
